@@ -8,6 +8,14 @@
 
 #include "user.h"
 
+
+/*
+ *
+ *  BRANCH TEST
+ *
+ *
+ */
+
 UDPSimulation::UDPSimulation(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::UDPSimulation),
       m_err_msg(new QErrorMessage(this)), m_count_user(0)
