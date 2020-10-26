@@ -8,14 +8,16 @@ User::User(int i_id):
     m_count_call_tout(0),
     m_timer(new QTimer(this))
 {
-    myFSM = new priority_ctrl(i_id);
+    FSM = new priority_ctrl(i_id);
+    FSM->set_user_list(&m_connected_user);
+
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
     m_timer->start(1000);
 }
 
 User::~User()
 {
-    delete myFSM;
+    delete FSM;
 }
 
 void User::connect_user(User* i_user)
@@ -31,31 +33,14 @@ void User::disconnect_from_all()
 
 void User::timeout_send_name()
 {
-    //qDebug() << QString::number(m_id) + QString::number(MSG_TYPE::UPDATE_NAME);
     m_count_call_tout++;
 
     QString t_name = QString::number(m_id);
-    send(User::MSG_TYPE::UPDATE_NAME, t_name);
+    send(MSG_TYPE::UPDATE_NAME, t_name);
 
     if(m_count_call_tout == 2)
     {
-        qDebug() << '(' << m_id << ')';
-        qDebug() << "----------------------------------------";
-        //check if a value was not updated
-        for(QString key : m_connected_user.keys())
-        {
-            qDebug() << key;
-
-            if(m_connected_user[key] == m_last_count[key])
-            {
-                m_connected_user.remove(key);
-                m_last_count.remove(key);
-            }
-        }
-        qDebug() << "----------------------------------------\n\n";
-
-        for(QString user : m_connected_user.keys())
-            m_last_count[user] = m_connected_user[user];
+        FSM->process(EVENT::E_UPDATE);
 
         m_count_call_tout = 0;
         emit update_gui_list(this);
@@ -75,10 +60,11 @@ void User::receive(QString& i_msg)
     {
         QString t_user_to_add = t_msg.mid(0,3);
 
+
         if(!m_connected_user.contains(t_user_to_add))
         {
             m_connected_user[t_user_to_add] = 1;
-            m_last_count[t_user_to_add] = 0;
+            //m_last_count[t_user_to_add] = 0;
 
             QString user_to_update = QString::number(m_id);
 
@@ -95,15 +81,15 @@ void User::receive(QString& i_msg)
         break;
 
     case MSG_TYPE::ANSWER:
-        myFSM->process(priority_ctrl::e_answer_to_rts, t_msg);
+        FSM->process(EVENT::E_ANSWER_TO_RTS, t_msg);
         break;
 
     case MSG_TYPE::REQUEST:
-        myFSM->process(priority_ctrl::e_request_received, t_msg);
+        FSM->process(EVENT::E_RECV_REQUEST, t_msg);
         break;
 
     case MSG_TYPE::AUDIO:
-        myFSM->process(priority_ctrl::e_recv_audio_data, t_msg);
+        FSM->process(EVENT::E_RECV_AUDIO_DATA, t_msg);
         break;
     }
 }
@@ -121,10 +107,10 @@ void User::send(int i_type, QString& i_msg)
     case MSG_TYPE::MSG:
         emit send_to_server(m_id, i_msg);
         break;
-
     }
 }
 
-void User::PTTpressed(){
-    myFSM->process(priority_ctrl::e_send);
+void User::PTTpressed()
+{
+    //FSM->process(priority_ctrl::e_send);
 }

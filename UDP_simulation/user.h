@@ -16,42 +16,40 @@ public:
 
 
     void PTTpressed();
+
     void send(int i_type, QString& i_msg);
     void connect_user(User* i_user);
     void disconnect_from_all();
 
     inline int get_id() const {return m_id;};
     inline QMap<QString, int>& get_connected_user_list() {return m_connected_user;};
+
 public:
     enum MSG_TYPE
     {
-        UPDATE_NAME,
+        UPDATE_NAME=0,
         MSG,
         AUDIO,
         REQUEST,
         ANSWER
     };
+    enum STATE
+    {
+        STATE_IDLE=0,
+        STATE_RTS,
+        STATE_CTS,
+        STATE_SENDING
+    };
 
 //--------------------------------------- private
 private:
-    /*
-    enum State
-    {
-        IDLE, TALK,
-        LISTEN
-    };
-    */
-
     int m_id;
 
-    priority_ctrl* myFSM;
-
-    //State m_internal_state;
+    priority_ctrl* FSM; //TODO: cambiare nome classe
 
     int m_count_call_tout;
 
     QMap<QString, int> m_connected_user;
-    QMap<QString, int> m_last_count;
 
     QTimer* m_timer;
 

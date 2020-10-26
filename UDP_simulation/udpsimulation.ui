@@ -272,6 +272,13 @@
       <item>
        <widget class="QTextEdit" name="log"/>
       </item>
+      <item>
+       <widget class="QPushButton" name="btn_log_clear">
+        <property name="text">
+         <string>clear</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

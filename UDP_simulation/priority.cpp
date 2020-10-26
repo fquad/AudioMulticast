@@ -6,34 +6,60 @@ priority::priority(int id)
     m_count_call_tout = 0;
 }
 
-void priority::reproduceAudio(QString data){
+void priority::reproduce_audio(QString data)
+{
     qDebug() << "received audio : " << data;
 }
 
-void priority::sendAudio(QString data){
+void priority::send_audio(QString data)
+{
     qDebug() << "received audio : " << data;
 }
 
-void priority::sendRequestToSend(QString data){
+void priority::send_RTS(QString data)
+{
     QString id = data.mid(0,3);
     qDebug() << "id: " + id + " want to send";
 }
 
-void priority::answerRequestToSend(QString data, bool answer){
+void priority::update_list()
+{
+    qDebug() << '(' << m_id << ')';
+    qDebug() << "----------------------------------------";
+
+    //check if a value was not updated
+    for(QString key : m_connected_user->keys())
+    {
+        if(m_connected_user->value(key) == m_connected_user_prev[key])
+        {
+            m_connected_user->remove(key);
+            m_connected_user_prev.remove(key);
+        }
+        else qDebug() << key;
+    }
+
+    qDebug() << "----------------------------------------\n\n";
+
+    m_connected_user_prev = *m_connected_user;
+}
+
+void priority::answer_RTS(QString data, bool answer)
+{
     qDebug() << "answered : "
              + QString::number(answer)
              + " to : "
              + data.mid(0,3);
 }
 
-bool priority::evaluateList(){
+bool priority::evaluate_list()
+{
     qDebug() << "evaluating list";
-    int n_sender = request_list.size() + 1;
-    int n_user = m_connected_user.size() + 1;
+    int n_sender = m_request_list.size() + 1;
+    int n_user = m_connected_user->size() + 1;
     int n_answer = 0;
 
     for(int i = 0; i < answer_list.size(); i++){
-        QString id = m_connected_user.key(i);
+        QString id = m_connected_user->key(i);
         if(answer_list.value(id) == 1){
             n_answer++;
         }
@@ -50,13 +76,13 @@ bool priority::evaluateList(){
     return false;
 }
 
-void priority::addRequestToList(QString data){
+void priority::add_RTS(QString data){
     QString id = data.mid(0,3);
     qDebug() << "added " + id + "request to list";
-    request_list.append(id);
+    m_request_list.append(id);
 }
 
-void priority::addAnswerToList(QString data){
+void priority::add_answer_to_list(QString data){
     QString id = data.mid(0,3);
     int answer = data.mid(3,1).toInt();
     // check that the asnwer is to the user request
@@ -66,61 +92,13 @@ void priority::addAnswerToList(QString data){
     answer_list.insert(id,answer);
 }
 
-void priority::clear_request_list(){
-    request_list.clear();
+void priority::clear_request_list()
+{
+    m_request_list.clear();
 }
 
-void priority::clear_answer_list(){
+void priority::clear_answer_list()
+{
     answer_list.clear();
 }
 
-void priority::send_name()
-{
-    //qDebug() << QString::number(m_id) + QString::number(MSG_TYPE::UPDATE_NAME);
-    m_count_call_tout++;
-
-    QString t_name = QString::number(m_id);
-
-    //send(User::MSG_TYPE::UPDATE_NAME, t_name);
-
-    if(m_count_call_tout == 2)
-    {
-        qDebug() << '(' << m_id << ')';
-        qDebug() << "----------------------------------------";
-        //check if a value was not updated
-        for(QString key : m_connected_user.keys())
-        {
-            qDebug() << key;
-
-            if(m_connected_user[key] == m_last_count[key])
-            {
-                m_connected_user.remove(key);
-                m_last_count.remove(key);
-            }
-        }
-        qDebug() << "----------------------------------------\n\n";
-
-        for(QString user : m_connected_user.keys())
-            m_last_count[user] = m_connected_user[user];
-
-        m_count_call_tout = 0;
-        //emit update_gui_list(this);
-    }
-}
-
-void priority::updateName(QString data){
-    QString t_user_to_add = data.mid(0,3);
-
-    if(!m_connected_user.contains(t_user_to_add))
-    {
-        m_connected_user[t_user_to_add] = 1;
-        m_last_count[t_user_to_add] = 0;
-
-        QString user_to_update = QString::number(m_id);
-
-        //emit update_gui_list(this);
-    } else
-    {
-        m_connected_user[t_user_to_add]++;
-    }
-}
