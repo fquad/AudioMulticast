@@ -6,276 +6,282 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>835</width>
-    <height>448</height>
+    <width>800</width>
+    <height>655</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>UDPSimulation</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>815</width>
-      <height>391</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="main_layout">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="input_label">
-       <property name="text">
-        <string>input</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="input_msg"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="multiple_send_btn">
-       <property name="text">
-        <string>Send multiple message </string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="join_btns_layout">
-       <property name="spacing">
-        <number>1</number>
-       </property>
-       <item>
-        <widget class="QPushButton" name="join_btn_user_1">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>join</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="join_btn_user_2">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>join</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="join_btn_user_3">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>join</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="join_btn_user_4">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>join</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="join_btn_user_5">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>join</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="quit_btns_layout">
-       <property name="spacing">
-        <number>1</number>
-       </property>
-       <item>
-        <widget class="QPushButton" name="quit_btn_user_1">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>quit</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="quit_btn_user_2">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>quit</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="quit_btn_user_3">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>quit</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="quit_btn_user_4">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>quit</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="quit_btn_user_5">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>quit</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_ID">
-       <property name="text">
-        <string>user ID</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="input_user_ID_layout">
-       <property name="spacing">
-        <number>1</number>
-       </property>
-       <item>
-        <widget class="QSpinBox" name="input_id_user_1"/>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="input_id_user_2"/>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="input_id_user_3"/>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="input_id_user_4"/>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="input_id_user_5"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="user_list_layout">
-       <property name="spacing">
-        <number>1</number>
-       </property>
-       <item>
-        <widget class="QListWidget" name="list_user_1"/>
-       </item>
-       <item>
-        <widget class="QListWidget" name="list_user_2"/>
-       </item>
-       <item>
-        <widget class="QListWidget" name="list_user_3"/>
-       </item>
-       <item>
-        <widget class="QListWidget" name="list_user_4"/>
-       </item>
-       <item>
-        <widget class="QListWidget" name="list_user_5"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="checkbox_layout">
-       <item>
-        <widget class="QCheckBox" name="check_box_user_1">
-         <property name="text">
-          <string>send</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="check_box_user_2">
-         <property name="text">
-          <string>send</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="check_box_user_3">
-         <property name="text">
-          <string>send</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="check_box_user_4">
-         <property name="text">
-          <string>send</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="check_box_user_5">
-         <property name="text">
-          <string>send</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="log_abel">
-       <property name="text">
-        <string>Log</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTextEdit" name="log"/>
-     </item>
-    </layout>
-   </widget>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMaximumSize</enum>
+      </property>
+      <item>
+       <widget class="QLabel" name="input_label">
+        <property name="text">
+         <string>input</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="input_msg"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="multiple_send_btn">
+        <property name="text">
+         <string>Send multiple message </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="join_btns_layout">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="join_btn_user_1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>join</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="join_btn_user_2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>join</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="join_btn_user_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>join</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="join_btn_user_4">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>join</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="join_btn_user_5">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>join</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="quit_btns_layout">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="quit_btn_user_1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>quit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quit_btn_user_2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>quit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quit_btn_user_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>quit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quit_btn_user_4">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>quit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quit_btn_user_5">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>quit</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_ID">
+        <property name="text">
+         <string>user ID</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="input_user_ID_layout">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QSpinBox" name="input_id_user_1"/>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="input_id_user_2"/>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="input_id_user_3"/>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="input_id_user_4"/>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="input_id_user_5"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="user_list_layout">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QListWidget" name="list_user_1"/>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_user_2"/>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_user_3"/>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_user_4"/>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_user_5"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="checkbox_layout">
+        <item>
+         <widget class="QCheckBox" name="check_box_user_1">
+          <property name="text">
+           <string>send</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="check_box_user_2">
+          <property name="text">
+           <string>send</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="check_box_user_3">
+          <property name="text">
+           <string>send</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="check_box_user_4">
+          <property name="text">
+           <string>send</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="check_box_user_5">
+          <property name="text">
+           <string>send</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="log_label">
+        <property name="text">
+         <string>Log</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="log"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>835</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>
