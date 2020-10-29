@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QErrorMessage>
+#include <QRandomGenerator>
 
 #include "user.h"
 
@@ -15,6 +16,8 @@ UDPSimulation::UDPSimulation(QWidget *parent)
       m_err_msg(new QErrorMessage(this)), m_count_user(0)
 {
     ui->setupUi(this);
+
+    m_timer.start();
 
     for(int i = 0; i<N_USER; ++i)
         is_join_flag[i] = true;
@@ -49,14 +52,13 @@ void UDPSimulation::on_join_btn_user_1_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_1;
 
             m_count_user++;
+            is_join_flag[0] = false;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-
-        is_join_flag[0] = false;
     }else
     {
         QString msg = ui->input_msg->text();
@@ -86,14 +88,13 @@ void UDPSimulation::on_join_btn_user_2_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_2;
 
             m_count_user++;
+            is_join_flag[1] = false;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-
-        is_join_flag[1] = false;
     }else
     {
         QString msg = ui->input_msg->text();
@@ -123,14 +124,13 @@ void UDPSimulation::on_join_btn_user_3_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_3;
 
             m_count_user++;
+            is_join_flag[2] = false;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-
-        is_join_flag[2] = false;
     }else
     {
         QString msg = ui->input_msg->text();
@@ -160,14 +160,13 @@ void UDPSimulation::on_join_btn_user_4_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_4;
 
             m_count_user++;
+            is_join_flag[3] = false;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-
-        is_join_flag[3] = false;
     }else
     {
         QString msg = ui->input_msg->text();
@@ -197,14 +196,13 @@ void UDPSimulation::on_join_btn_user_5_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_5;
 
             m_count_user++;
+            is_join_flag[4] = false;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-
-        is_join_flag[4] = false;
     }else
     {
         QString msg = ui->input_msg->text();
@@ -349,4 +347,39 @@ void UDPSimulation::receive_from_users(int i_id, QString& i_string)
 {
     QString msg = QString("[server]: from (") + QString::number(i_id) + QString(") ") + i_string;
     ui->log->append(msg);
+}
+
+void UDPSimulation::on_multiple_send_btn_clicked()
+{
+    QList<User*> t_user_list;
+    QList<User*> t_sorted_user_list;
+
+    for(USER_GUI el : m_user_list)
+        if(Qt::CheckState::Checked == el.m_GUI_send_flag->checkState())
+        {
+            t_user_list.append(el.m_user);
+            t_sorted_user_list.append(nullptr);
+        }
+
+    for(User* el : t_user_list)
+    {
+          qsrand(qrand());
+          int t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
+
+          while(t_sorted_user_list.at(t_rnd_index) != nullptr)
+          {
+              qsrand(m_timer.msec());
+              t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
+          }
+          t_sorted_user_list[t_rnd_index] = el;
+    }
+    QString msg = ui->input_msg->text();
+    for(User* user : t_sorted_user_list)
+        user->send(User::MSG_TYPE::MSG, msg);
+
+}
+
+void UDPSimulation::on_btn_clear_log_clicked()
+{
+    ui->log->clear();
 }

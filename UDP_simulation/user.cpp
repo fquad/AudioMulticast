@@ -105,6 +105,5 @@ void User::send(int i_type, QString& i_msg)
     case MSG_TYPE::MSG:
         emit send_to_server(m_id, i_msg);
         break;
-
     }
 }

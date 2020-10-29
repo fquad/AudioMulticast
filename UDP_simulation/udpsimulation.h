@@ -2,6 +2,7 @@
 #define UDPSIMULATION_H
 
 #include <QMainWindow>
+#include <QTime>
 
 #include "server.h"
 #include "user.h"
@@ -47,6 +48,10 @@ private slots:
 
     void receive_updated_list(User*);
     void receive_from_users(int, QString&);
+    void on_multiple_send_btn_clicked();
+
+    void on_btn_clear_log_clicked();
+
 private:
     Ui::UDPSimulation *ui;
     QErrorMessage* m_err_msg;
@@ -67,5 +72,6 @@ private:
 
     bool is_join_flag[N_USER];
 
+    QTime m_timer;
 };
 #endif // UDPSIMULATION_H
