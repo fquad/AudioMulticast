@@ -2,7 +2,7 @@
 #define USER_H
 
 #include <QList>
-
+#include <priority_ctrl.h>
 
 
 class User: public QObject
@@ -14,6 +14,8 @@ public:
     User(int m_id);
     ~User();
 
+
+    void PTTpressed();
     void send(int i_type, QString& i_msg);
     void connect_user(User* i_user);
     void disconnect_from_all();
@@ -23,21 +25,28 @@ public:
 public:
     enum MSG_TYPE
     {
-        UPDATE_NAME, MSG,
-        AUDIO_DATA, AUDIO_ACK
+        UPDATE_NAME,
+        MSG,
+        AUDIO,
+        REQUEST,
+        ANSWER
     };
 
 //--------------------------------------- private
 private:
+    /*
     enum State
     {
         IDLE, TALK,
         LISTEN
     };
+    */
 
     int m_id;
 
-    State m_internal_state;
+    priority_ctrl* myFSM;
+
+    //State m_internal_state;
 
     int m_count_call_tout;
 

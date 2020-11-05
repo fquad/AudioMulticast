@@ -17,11 +17,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
+    priority.cpp \
+    priority_ctrl.cpp \
     server.cpp \
     udpsimulation.cpp \
     user.cpp
 
 HEADERS += \
+    priority.h \
+    priority_ctrl.h \
     server.h \
     udpsimulation.h \
     user.h

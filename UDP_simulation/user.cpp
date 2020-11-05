@@ -4,15 +4,19 @@
 #include<QTimer>
 
 User::User(int i_id):
-    m_id(i_id), m_count_call_tout(0),
-    m_timer(new QTimer(this))
+    m_id(i_id),
+    m_count_call_tout(0),
+    m_timer(new QTimer(this)),
+    myFSM(new priority_ctrl())
 {
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
     m_timer->start(1000);
 }
 
 User::~User()
-{}
+{
+    delete myFSM;
+}
 
 void User::connect_user(User* i_user)
 {
@@ -89,6 +93,18 @@ void User::receive(QString& i_msg)
     case MSG_TYPE::MSG:
         qDebug() << t_msg;
         break;
+
+    case MSG_TYPE::ANSWER:
+        myFSM->process(priority_ctrl::e_answer_to_rts, t_msg);
+        break;
+
+    case MSG_TYPE::REQUEST:
+        myFSM->process(priority_ctrl::e_request_received, t_msg);
+        break;
+
+    case MSG_TYPE::AUDIO:
+        myFSM->process(priority_ctrl::e_recv_audio_data, t_msg);
+        break;
     }
 }
 
@@ -107,4 +123,8 @@ void User::send(int i_type, QString& i_msg)
         break;
 
     }
+}
+
+void User::PTTpressed(){
+    myFSM->process(priority_ctrl::e_send);
 }
