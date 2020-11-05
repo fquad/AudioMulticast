@@ -2,7 +2,7 @@
 #define USER_H
 
 #include <QList>
-#include <priority_ctrl.h>
+#include "priority_ctrl.h"
 
 
 class User: public QObject

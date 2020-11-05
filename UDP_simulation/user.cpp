@@ -6,9 +6,9 @@
 User::User(int i_id):
     m_id(i_id),
     m_count_call_tout(0),
-    m_timer(new QTimer(this)),
-    myFSM(new priority_ctrl())
+    m_timer(new QTimer(this))
 {
+    myFSM = new priority_ctrl(i_id);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
     m_timer->start(1000);
 }
