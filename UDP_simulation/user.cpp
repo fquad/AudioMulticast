@@ -6,7 +6,8 @@
 User::User(int i_id):
     m_id(i_id),
     m_count_call_tout(0),
-    m_timer(new QTimer(this))
+    m_timer(new QTimer(this)),
+    myFSM(new priority_ctrl())
 {
     FSM = new priority_ctrl(i_id);
     FSM->set_user_list(&m_connected_user);
@@ -17,7 +18,7 @@ User::User(int i_id):
 
 User::~User()
 {
-    delete FSM;
+    delete myFSM;
 }
 
 void User::connect_user(User* i_user)
@@ -80,17 +81,17 @@ void User::receive(QString& i_msg)
         qDebug() << t_msg;
         break;
 
+        break;
+        myFSM->process(priority_ctrl::e_recv_audio_data, t_msg);
     case MSG_TYPE::ANSWER:
-        FSM->process(EVENT::E_ANSWER_TO_RTS, t_msg);
+        myFSM->process(priority_ctrl::e_answer_to_rts, t_msg);
         break;
 
     case MSG_TYPE::REQUEST:
-        FSM->process(EVENT::E_RECV_REQUEST, t_msg);
         break;
+        myFSM->process(priority_ctrl::e_request_received, t_msg);
 
     case MSG_TYPE::AUDIO:
-        FSM->process(EVENT::E_RECV_AUDIO_DATA, t_msg);
-        break;
     }
 }
 
@@ -108,9 +109,4 @@ void User::send(int i_type, QString& i_msg)
         emit send_to_server(m_id, i_msg);
         break;
     }
-}
-
-void User::PTTpressed()
-{
-    //FSM->process(priority_ctrl::e_send);
 }

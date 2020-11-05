@@ -14,9 +14,7 @@ public:
     User(int m_id);
     ~User();
 
-
     void PTTpressed();
-
     void send(int i_type, QString& i_msg);
     void connect_user(User* i_user);
     void disconnect_from_all();
@@ -30,8 +28,8 @@ public:
         UPDATE_NAME=0,
         MSG,
         AUDIO,
-        REQUEST,
         ANSWER
+        REQUEST,
     };
     enum STATE
     {
@@ -46,6 +44,8 @@ private:
     int m_id;
 
     priority_ctrl* FSM; //TODO: cambiare nome classe
+
+    //State m_internal_state;
 
     int m_count_call_tout;
 
