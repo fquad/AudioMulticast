@@ -22,15 +22,28 @@ void priority::send_RTS(QString data)
     qDebug() << "id: " + id + " want to send";
 }
 
-void priority::update_list()
+void priority::update_list(QString& i_user_name)
 {
+    if(!m_connected_user->contains(i_user_name))
+    {
+        (*m_connected_user)[i_user_name] = 1;
+        m_connected_user_prev[i_user_name] = 0;
+
+        QString user_to_update = QString::number(m_id);
+
+        //emit update_gui_list(this);
+    } else
+    {
+        m_connected_user_prev[i_user_name]++;
+    }
+
     qDebug() << '(' << m_id << ')';
     qDebug() << "----------------------------------------";
 
     //check if a value was not updated
     for(QString key : m_connected_user->keys())
     {
-        if(m_connected_user->value(key) == m_connected_user_prev[key])
+        if((*m_connected_user)[key] == m_connected_user_prev[key])
         {
             m_connected_user->remove(key);
             m_connected_user_prev.remove(key);

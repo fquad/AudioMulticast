@@ -15,7 +15,7 @@ public:
     void answer_RTS(QString data, bool answer);
 
     bool evaluate_list();
-    void update_list();
+    void update_list(QString& i_user_name);
     void add_RTS(QString data);
     void add_answer_to_list(QString data);
     void clear_request_list();

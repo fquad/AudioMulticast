@@ -17,7 +17,8 @@ enum EVENT //nello user fare uno switch con i tipi di dati e usare process nel m
     E_RECV_AUDIO_DATA,
     E_SEND_AUDIO_DATA,
     E_ANSWER_TO_RTS,
-    E_UPDATE,
+    E_RECV_UPDATE,
+    E_SEND_UPDATE
 };
 
 class priority_ctrl:  public QObject

@@ -19,15 +19,14 @@ void priority_ctrl::set_user_list(QMap<QString, int>* i_user_list_ptr)
 
 void priority_ctrl::process(EVENT i_e, QString i_data)
 {
-    if(i_e == EVENT::E_UPDATE)
+    if(i_e == EVENT::E_RECV_UPDATE)
     {
-        m_priority->update_list();
+        m_priority->update_list(i_data);
     }
 
     switch (m_current_state)
     {
         case state_idle:
-
             qDebug() << "FSM state: state_idle";
 
             if(i_e == EVENT::E_SEND)
@@ -68,7 +67,6 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
         break;
 
         case state_cts:
-
             qDebug() << "FSM state: state_cts";
 
             if(i_e == EVENT::E_RECV_REQUEST)
@@ -131,7 +129,6 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
                 m_priority->send_audio(i_data);
                 break;
             }
-
         break;
 
         default:
