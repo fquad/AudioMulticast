@@ -22,7 +22,7 @@ enum EVENT //nello user fare uno switch con i tipi di dati e usare process nel m
 
 class priority_ctrl:  public QObject
 {
-    Q_OBJECT    
+    Q_OBJECT
 
 public:
     priority_ctrl(int id);

@@ -17,7 +17,7 @@ User::User(int i_id):
 
 User::~User()
 {
-    delete myFSM;
+    delete FSM;
 }
 
 void User::connect_user(User* i_user)
@@ -81,16 +81,17 @@ void User::receive(QString& i_msg)
         break;
 
         break;
-        myFSM->process(priority_ctrl::e_recv_audio_data, t_msg);
+        FSM->process(EVENT::E_RECV_AUDIO_DATA, t_msg);
     case MSG_TYPE::ANSWER:
-        myFSM->process(priority_ctrl::e_answer_to_rts, t_msg);
+        FSM->process(EVENT::E_ANSWER_TO_RTS, t_msg);
         break;
 
     case MSG_TYPE::REQUEST:
         break;
-        myFSM->process(priority_ctrl::e_request_received, t_msg);
+        FSM->process(EVENT::E_RECV_REQUEST, t_msg);
 
     case MSG_TYPE::AUDIO:
+        break;
     }
 }
 

@@ -28,7 +28,7 @@ public:
         UPDATE_NAME=0,
         MSG,
         AUDIO,
-        ANSWER
+        ANSWER,
         REQUEST,
     };
     enum STATE
