@@ -60,7 +60,8 @@ void UDPSimulation::on_join_btn_user_1_clicked()
     } else
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->send(User::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
+        //m_user_list[QString::number(ui->input_id_user_1->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
     }
 }
 
@@ -98,7 +99,8 @@ void UDPSimulation::on_join_btn_user_2_clicked()
     } else
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_2->value())].m_user->send(User::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
+        //m_user_list[QString::number(ui->input_id_user_2->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
     }
 }
 
@@ -134,7 +136,8 @@ void UDPSimulation::on_join_btn_user_3_clicked()
     }else
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_3->value())].m_user->send(User::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
+        //m_user_list[QString::number(ui->input_id_user_3->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
     }
 }
 
@@ -170,7 +173,8 @@ void UDPSimulation::on_join_btn_user_4_clicked()
     }else
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_4->value())].m_user->send(User::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
+        //m_user_list[QString::number(ui->input_id_user_4->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
     }
 }
 
@@ -206,7 +210,8 @@ void UDPSimulation::on_join_btn_user_5_clicked()
     } else // when it becomes send button
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_5->value())].m_user->send(User::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
+        //m_user_list[QString::number(ui->input_id_user_5->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
     }
 }
 
@@ -332,7 +337,6 @@ void UDPSimulation::on_input_id_user_5_valueChanged(int arg1)
 
 void UDPSimulation::receive_updated_list(User* i_user)
 {
-    qDebug() << 1;
     USER_GUI t_user = m_user_list[QString::number(i_user->get_id())];
 
     t_user.m_GUI_user_list->clear();
@@ -373,7 +377,8 @@ void UDPSimulation::on_multiple_send_btn_clicked()
     }
     QString msg = ui->input_msg->text();
     for(User* user : t_sorted_user_list)
-        user->send(User::MSG_TYPE::MSG, msg);
+        user->PTTpressed();
+        //user->send(priority::MSG_TYPE::MSG, msg);
 
 }
 

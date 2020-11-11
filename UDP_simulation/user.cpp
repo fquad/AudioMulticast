@@ -22,7 +22,8 @@ User::~User()
 
 void User::connect_user(User* i_user)
 {
-    connect(this, SIGNAL(send_to_slot(QString&)),
+    //TODO trovare un modo per non avere m_priority pubblico
+    connect(FSM->m_priority, SIGNAL(send_signal(QString&)),
             i_user, SLOT(receive(QString&)));
 }
 
@@ -32,19 +33,28 @@ void User::disconnect_from_all()
 }
 
 void User::timeout_send_name()
-{ //ogni secondo viene controllata la lista e ogni due viene inviata
+{
     m_count_call_tout++;
-
-    QString t_name = QString::number(m_id);
-    send(MSG_TYPE::UPDATE_NAME, t_name); //sostituire con process
 
     if(m_count_call_tout == 2)
     {
-        FSM->process(EVENT::E_SEND_UPDATE);
+        //check every 2 second the list to control if someone has left
+        FSM->process(EVENT::E_CHECK_LIST);
 
         m_count_call_tout = 0;
+        //used to update the GUI list ( only present in simulation)
         emit update_gui_list(this);
+    }else{
+        //send every 1 second the user id for updating the list
+        QString t_name = QString::number(m_id);
+        FSM->process(EVENT::E_SEND_UPDATE, t_name);
     }
+}
+
+
+void User::PTTpressed(){
+    QString msg = "myid:" + QString::number(m_id);
+    FSM->process(EVENT::E_REQUEST_SEND, msg);
 }
 
 void User::receive(QString& i_msg)
@@ -52,18 +62,27 @@ void User::receive(QString& i_msg)
     int t_type = i_msg.mid(0,1).toInt();
     QString t_msg = i_msg.mid(1,-1);
 
+    qDebug() << QString::number(m_id)
+             << "received type: "
+             << i_msg.mid(0,1)
+             << " msg: "
+             << i_msg.mid(1,-1);
+
     switch(t_type)
     {
-    case MSG_TYPE::UPDATE_NAME:
+
+    case priority::MSG_TYPE::UPDATE_NAME:
         FSM->process(EVENT::E_RECV_UPDATE, t_msg);
         break;
-    case MSG_TYPE::MSG:
-        qDebug() << t_msg;
+
+    case priority::MSG_TYPE::MSG:
+        qDebug() << "msg "<<  t_msg;
         break;
 
-    case MSG_TYPE::ANSWER:
+    case priority::MSG_TYPE::ANSWER:
         FSM->process(EVENT::E_ANSWER_TO_RTS, t_msg);
         break;
+
         //    case MSG_TYPE::UPDATE_NAME:
         //    {
         //        QString t_user_to_add = t_msg.mid(0,3);
@@ -84,28 +103,12 @@ void User::receive(QString& i_msg)
         //        break;
         //    }
 
-    case MSG_TYPE::REQUEST:
+    case priority::MSG_TYPE::REQUEST:
         FSM->process(EVENT::E_RECV_REQUEST, t_msg);
         break;
 
-    case MSG_TYPE::AUDIO:
+    case priority::MSG_TYPE::AUDIO:
         FSM->process(EVENT::E_RECV_AUDIO_DATA, t_msg);
-        break;
-    }
-}
-
-void User::send(int i_type, QString& i_msg) // questa logica va nella priority::send
-{
-    QString t_msg_to_users = QString::number(i_type) + i_msg;
-
-    switch(i_type)
-    {
-    case MSG_TYPE::UPDATE_NAME:
-        emit send_to_slot(t_msg_to_users); // FSM->process(EVENT::E_SEND_UPDATE, i_msg);
-        break;
-
-    case MSG_TYPE::MSG:
-        emit send_to_server(m_id, i_msg);
         break;
     }
 }

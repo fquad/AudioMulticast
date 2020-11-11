@@ -9,7 +9,7 @@ priority_ctrl::priority_ctrl(int id) :
 priority_ctrl::~priority_ctrl()
 {
     delete m_priority;
-    qDebug() << "FSM deleted";
+    //qDebug() << "FSM deleted";
 }
 
 void priority_ctrl::set_user_list(QMap<QString, int>* i_user_list_ptr)
@@ -19,17 +19,27 @@ void priority_ctrl::set_user_list(QMap<QString, int>* i_user_list_ptr)
 
 void priority_ctrl::process(EVENT i_e, QString i_data)
 {
+    if(i_e == EVENT::E_CHECK_LIST)
+    {
+        m_priority->check_list();
+    }
+
     if(i_e == EVENT::E_RECV_UPDATE)
     {
-        m_priority->update_list(i_data);
+        m_priority->update_users_list(i_data);
+    }
+
+    if(i_e == EVENT::E_SEND_UPDATE)
+    {
+        m_priority->send_user_id();
     }
 
     switch (m_current_state)
     {
         case state_idle:
-            qDebug() << "FSM state: state_idle";
+            //qDebug() << QString::number(m_priority->getId()) <<   " FSM state: state_idle";
 
-            if(i_e == EVENT::E_SEND)
+            if(i_e == EVENT::E_REQUEST_SEND)
             {
                 //PTT button pressed
                 m_current_state = State::state_rts;
@@ -59,7 +69,7 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
                 connect(&rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
                 cts_timer.start(t_timeout);
 
-                m_priority->answer_RTS(i_data,true);
+                m_priority->answer_RTS(true, i_data);
 
                 break;
 
@@ -67,12 +77,12 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
         break;
 
         case state_cts:
-            qDebug() << "FSM state: state_cts";
+            //qDebug() << QString::number(m_priority->getId()) <<   " FSM state: state_cts";
 
             if(i_e == EVENT::E_RECV_REQUEST)
             {
                 //Received a request of sending from another user
-                m_priority->answer_RTS(i_data,false);
+                m_priority->answer_RTS(false, i_data);
                 break;
 
             } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
@@ -86,12 +96,12 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
 
         case state_rts:
 
-            qDebug() << "FSM state: state_rts";
+            //qDebug() << QString::number(m_priority->getId()) <<   " FSM state: state_rts";
 
             if(i_e == EVENT::E_RECV_REQUEST)
             {
                 //Received a request to send from another user
-                m_priority->answer_RTS(i_data,false);
+                m_priority->answer_RTS(false, i_data);
                 m_priority->add_RTS(i_data);
                 break;
 
@@ -115,7 +125,7 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
 
         case state_sending:
 
-            qDebug() << "FSM state: state_sending";
+            //qDebug() << QString::number(m_priority->getId()) <<  " FSM state: state_sending";
 
             if(i_e == EVENT::E_STOP_SEND)
             {
@@ -126,28 +136,25 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
             } else if(i_e == EVENT::E_SEND_AUDIO_DATA)
             {
                 //audio data available to be sent
-                m_priority->send_audio(i_data);
+                m_priority->send_audio();
                 break;
             }
-        break;
-
-        default:
         break;
     }
 }
 
 void priority_ctrl::rts_timeout()
 {
-    qDebug() << "rts_timeout";
+    qDebug() << QString::number(m_priority->getId()) <<   " rts_timeout";
     bool answer = m_priority->evaluate_list();
 
     if(answer)
     {
-        qDebug() << "permission_confirmed";
+        //qDebug() << "permission_confirmed";
         m_current_state = State::state_sending;
     } else
     {
-        qDebug() << "permission_denied";
+        //qDebug() << "permission_denied";
         m_current_state = State::state_idle;
     }
 
@@ -157,7 +164,7 @@ void priority_ctrl::rts_timeout()
 
 void priority_ctrl::cts_timeout()
 {
-    qDebug() << "cts_timeout";
+    qDebug() << QString::number(m_priority->getId()) <<  " cts_timeout";
 
     m_current_state = State::state_idle;
     m_priority->clear_request_list();
