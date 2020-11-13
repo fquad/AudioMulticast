@@ -365,6 +365,7 @@ void UDPSimulation::on_multiple_send_btn_clicked()
             t_sorted_user_list.append(nullptr);
         }
 
+    //choose a random order for the users to send
     for(User* el : t_user_list)
     {
           int t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
@@ -375,9 +376,11 @@ void UDPSimulation::on_multiple_send_btn_clicked()
           }
           t_sorted_user_list[t_rnd_index] = el;
     }
+
     QString msg = ui->input_msg->text();
-    for(User* user : t_sorted_user_list)
+    for(User* user : t_sorted_user_list){
         user->PTTpressed();
+    }
         //user->send(priority::MSG_TYPE::MSG, msg);
 
 }

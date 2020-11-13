@@ -62,7 +62,7 @@ void User::receive(QString& i_msg)
     int t_type = i_msg.mid(0,1).toInt();
     QString t_msg = i_msg.mid(1,-1);
 
-    qDebug() << QString::number(m_id)
+    qDebug() << m_id
              << "received type: "
              << i_msg.mid(0,1)
              << " msg: "

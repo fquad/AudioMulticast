@@ -23,7 +23,7 @@ public:
     void reproduce_audio(QString data);
 
     void send_audio();
-    void send_RTS(QString data);
+    void send_RTS();
     void answer_RTS(bool answer, QString requesterId);
 
     bool evaluate_list();
@@ -58,7 +58,7 @@ private:
     QMap<QString, int> m_connected_user_prev;
 
     QList<QString> m_request_list;
-    QMap<QString, int> answer_list;
+    QList<int> m_answer_list;
 
 signals:
     void send_signal(QString& o_msg);

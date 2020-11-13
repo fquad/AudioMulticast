@@ -182,19 +182,39 @@
          <number>1</number>
         </property>
         <item>
-         <widget class="QSpinBox" name="input_id_user_1"/>
+         <widget class="QSpinBox" name="input_id_user_1">
+          <property name="maximum">
+           <number>200</number>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="input_id_user_2"/>
+         <widget class="QSpinBox" name="input_id_user_2">
+          <property name="maximum">
+           <number>200</number>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="input_id_user_3"/>
+         <widget class="QSpinBox" name="input_id_user_3">
+          <property name="maximum">
+           <number>200</number>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="input_id_user_4"/>
+         <widget class="QSpinBox" name="input_id_user_4">
+          <property name="maximum">
+           <number>200</number>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="input_id_user_5"/>
+         <widget class="QSpinBox" name="input_id_user_5">
+          <property name="maximum">
+           <number>200</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -289,7 +309,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

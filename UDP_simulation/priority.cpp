@@ -24,15 +24,14 @@ void priority::send_audio()
     qDebug() << "received audio : " << audioData;
 }
 
-void priority::send_RTS(QString data)
+void priority::send_RTS()
 {
     //send a request to start sending audio
 
     QString id = QString::number(m_id);
-
+    qDebug() << m_id
+             << "want to send";
     send(MSG_TYPE::REQUEST,id);
-
-    qDebug() << "id: " + id + " want to send";
 }
 
 void priority::update_users_list(QString& i_user_name)
@@ -91,14 +90,14 @@ void priority::answer_RTS(bool answer, QString requesterId)
     if(requesterId.toInt() > 0 && requesterId.toInt() < 255){
 
         qDebug() << QString::number(m_id)
-                 + " answered : "
-                 + QString::number(answer)
-                 + " to : "
-                 + requesterId;
+                 << " answered : "
+                 << QString::number(answer)
+                 << " to : "
+                 << requesterId;
 
         QString msg = requesterId + QString::number(answer);
 
-        send(MSG_TYPE::REQUEST, msg);
+        send(MSG_TYPE::ANSWER, msg);
     }
 }
 
@@ -108,26 +107,32 @@ bool priority::evaluate_list()
      * the user is able to send or not
      */
 
-    qDebug() << "evaluating list";
+
     int n_sender = m_request_list.size() + 1;
     int n_user = m_connected_user->size() + 1;
-    int n_answer = 0;
+    int n_answer =  m_answer_list.size();
+    int n_permission = 0;
 
-    for(int i = 0; i < answer_list.size(); i++){
-        QString id = m_connected_user->key(i);
-        if(answer_list.value(id) == 1){
-            n_answer++;
+    for(int i = 0; i < n_answer; i++){
+        if(m_answer_list.at(i) == 1){
+            n_permission++;
         }
     }
-    qDebug() << "---------";
-    qDebug() << "n sender: " + QString::number(n_sender);
-    qDebug() << "n answer: " + QString::number(n_answer);
-    qDebug() << "n user  : " + QString::number(n_user);
-    qDebug() << "---------";
+    qDebug() << m_id << " is evaluating his list";
+    qDebug() << "---------------";
+    qDebug() << "   n sender    : " + QString::number(n_sender);
+    qDebug() << "   n answer    : " + QString::number(n_answer);
+    qDebug() << "   n permission: " + QString::number(n_permission);
+    qDebug() << "   n user      : " + QString::number(n_user);
 
-    if( 1 / n_sender  <= n_answer / (n_user - 1) ){
+
+    if( 1 / n_sender  <= n_permission / (n_user - 1) ){
+        qDebug() << "permission granted";
+        qDebug() << "---------------";
         return true;
     }
+    qDebug() << "permission denied";
+    qDebug() << "---------------";
     return false;
 }
 
@@ -135,7 +140,11 @@ void priority::add_RTS(QString data){
     //add the received Request To Send to the list with all the requests
 
     QString id = data.mid(0,3);
-    qDebug() << "added " + id + "request to list";
+    qDebug() << m_id
+             << " added: "
+             << id
+             << " to request to list";
+
     m_request_list.append(id);
 }
 
@@ -145,10 +154,13 @@ void priority::add_answer_to_list(QString data){
     QString id = data.mid(0,3);
     int answer = data.mid(3,1).toInt();
     // check that the asnwer is to the user request
-    qDebug() << "added id: " + id
-                + " answer to list with value: "
-                + QString::number(answer);
-    answer_list.insert(id,answer);
+    if(id == QString::number(m_id)){
+        m_answer_list.append(answer);
+
+        qDebug() << m_id
+                 << " added answer to list with value: "
+                 << answer;
+    }
 }
 
 void priority::clear_request_list()
@@ -158,7 +170,7 @@ void priority::clear_request_list()
 
 void priority::clear_answer_list()
 {
-    answer_list.clear();
+    m_answer_list.clear();
 }
 
 void priority::send(MSG_TYPE i_type, QString data){

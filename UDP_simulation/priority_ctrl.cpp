@@ -4,12 +4,16 @@
 
 priority_ctrl::priority_ctrl(int id) :
   m_priority(new priority(id)), m_current_state(state_idle)
-{}
+{
+    //connect the timers to their callback
+    connect(&rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
+    connect(&cts_timer, SIGNAL(timeout()), this, SLOT(cts_timeout()));
+}
 
 priority_ctrl::~priority_ctrl()
 {
     delete m_priority;
-    //qDebug() << "FSM deleted";
+    qDebug() << "FSM deleted";
 }
 
 void priority_ctrl::set_user_list(QMap<QString, int>* i_user_list_ptr)
@@ -43,12 +47,10 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
             {
                 //PTT button pressed
                 m_current_state = State::state_rts;
-                m_priority->send_RTS(i_data);
+                m_priority->send_RTS();
 
                 //state_rts entry Point
                 rts_timer.setSingleShot(true);
-
-                connect(&rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
                 rts_timer.start(t_timeout);
 
                 break;
@@ -66,7 +68,6 @@ void priority_ctrl::process(EVENT i_e, QString i_data)
 
                 // state_cts entry Point
                 cts_timer.setSingleShot(true);
-                connect(&rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
                 cts_timer.start(t_timeout);
 
                 m_priority->answer_RTS(true, i_data);
@@ -165,7 +166,7 @@ void priority_ctrl::rts_timeout()
 void priority_ctrl::cts_timeout()
 {
     qDebug() << QString::number(m_priority->getId()) <<  " cts_timeout";
-
+    //TODO cts_timeout is not getting triggered (or not starting)
     m_current_state = State::state_idle;
     m_priority->clear_request_list();
 }
