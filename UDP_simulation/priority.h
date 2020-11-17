@@ -4,6 +4,8 @@
 #include <QString>
 #include <QDebug>
 
+class UDPSimulation;
+
 class priority: public QObject
 {
     Q_OBJECT
@@ -19,7 +21,11 @@ public:
     };
 
 
-    priority(int id);
+    priority(int id, UDPSimulation *w);
+
+    void connect_to_group();
+    void disconnect_from_group();
+
     void reproduce_audio(QString data);
 
     void send_audio();
@@ -45,10 +51,8 @@ public:
     inline void set_user_list(QMap<QString, int>* i_user_list_ptr)
     { m_connected_user = i_user_list_ptr; }
 
-/*    void updateName(QString data); //togliere perchè lo gestisce lo user
-    void send_name(); */             // ----------------------------------
-
 private:
+    UDPSimulation *m_window;
     int m_id;
     int m_count_call_tout;
     void send(MSG_TYPE i_type, QString data);

@@ -3,12 +3,13 @@
 #include<QDebug>
 #include<QTimer>
 
-User::User(int i_id):
+
+User::User(int i_id, UDPSimulation *w):
     m_id(i_id),
     m_count_call_tout(0),
     m_timer(new QTimer(this))
 {
-    FSM = new priority_ctrl(i_id);
+    FSM = new priority_ctrl(i_id, w);
     FSM->set_user_list(&m_connected_user);
 
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
@@ -22,14 +23,16 @@ User::~User()
 
 void User::connect_user(User* i_user)
 {
-    //TODO trovare un modo per non avere m_priority pubblico
+    //TODO just needed in the simulation enviroment
     connect(FSM->m_priority, SIGNAL(send_signal(QString&)),
             i_user, SLOT(receive(QString&)));
+    FSM->process(EVENT::E_CONNECT);
 }
 
 void User::disconnect_from_all()
 {
     disconnect(this, nullptr, nullptr, nullptr);
+    FSM->process(EVENT::E_DISCONNECT);
 }
 
 void User::timeout_send_name()
@@ -53,8 +56,15 @@ void User::timeout_send_name()
 
 
 void User::PTTpressed(){
-    QString msg = "myid:" + QString::number(m_id);
-    FSM->process(EVENT::E_REQUEST_SEND, msg);
+    FSM->process(EVENT::E_REQUEST_SEND);
+}
+
+void User::PTTreleased(){
+    FSM->process(EVENT::E_STOP_SEND);
+}
+
+bool User::get_is_sending(){
+    return  FSM->get_is_sending();
 }
 
 void User::receive(QString& i_msg)
@@ -82,26 +92,6 @@ void User::receive(QString& i_msg)
     case priority::MSG_TYPE::ANSWER:
         FSM->process(EVENT::E_ANSWER_TO_RTS, t_msg);
         break;
-
-        //    case MSG_TYPE::UPDATE_NAME:
-        //    {
-        //        QString t_user_to_add = t_msg.mid(0,3);
-
-
-        //        if(!m_connected_user.contains(t_user_to_add))
-        //        {
-        //            m_connected_user[t_user_to_add] = 1;
-        //            //m_last_count[t_user_to_add] = 0;
-
-        //            QString user_to_update = QString::number(m_id);
-
-        //            emit update_gui_list(this);
-        //        } else
-        //        {
-        //            m_connected_user[t_user_to_add]++;
-        //        }
-        //        break;
-        //    }
 
     case priority::MSG_TYPE::REQUEST:
         FSM->process(EVENT::E_RECV_REQUEST, t_msg);

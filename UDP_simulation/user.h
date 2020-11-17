@@ -5,16 +5,20 @@
 #include "priority_ctrl.h"
 
 
+class UDPSimulation;
+
 class User: public QObject
 {
     Q_OBJECT
 
 //--------------------------------------- public
 public:
-    User(int m_id);
+    User(int m_id, UDPSimulation *w);
     ~User();
 
     void PTTpressed();
+    void PTTreleased();
+    bool get_is_sending();
     void connect_user(User* i_user);
     void disconnect_from_all();
 

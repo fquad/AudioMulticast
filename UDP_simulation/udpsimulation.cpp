@@ -18,7 +18,7 @@ UDPSimulation::UDPSimulation(QWidget *parent)
     ui->setupUi(this);
 
     for(int i = 0; i<N_USER; ++i)
-        is_join_flag[i] = true;
+        is_join_flag[i] = 0;
 }
 
 UDPSimulation::~UDPSimulation()
@@ -30,10 +30,10 @@ UDPSimulation::~UDPSimulation()
 
 void UDPSimulation::on_join_btn_user_1_clicked()
 {
-    if(is_join_flag[0])
+    if(is_join_flag[0] == 0)
     {
         int t_id = ui->input_id_user_1->value();
-        User* t_user = new User(t_id);
+        User* t_user = new User(t_id, this);
 
         if(m_server.join(t_user))
         {
@@ -50,27 +50,35 @@ void UDPSimulation::on_join_btn_user_1_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_1;
 
             m_count_user++;
-            is_join_flag[0] = false;
+            is_join_flag[0] = 1;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-    } else
-    {
+    } else if (is_join_flag[0] == 1){
+        //PTT pressed
         QString msg = ui->input_msg->text();
         m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
-        //m_user_list[QString::number(ui->input_id_user_1->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
+        ui->join_btn_user_1->setText(QString("stop sending"));
+        is_join_flag[0] = 2;
+
+    }else if (is_join_flag[0] == 2){
+        //PTT released
+        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTreleased();
+        ui->join_btn_user_1->setText(QString("send"));
+        is_join_flag[0] = 1;
+
     }
 }
 
 void UDPSimulation::on_join_btn_user_2_clicked()
 {
-    if(is_join_flag[1])
+    if(is_join_flag[1] == 0)
     {
         int t_id = ui->input_id_user_2->value();
-        User* t_user = new User(t_id);
+        User* t_user = new User(t_id, this);
 
         if(m_server.join(t_user))
         {
@@ -87,7 +95,7 @@ void UDPSimulation::on_join_btn_user_2_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_2;
 
             m_count_user++;
-            is_join_flag[1] = false;
+            is_join_flag[1] = 1;
 
         } else
         {
@@ -96,20 +104,29 @@ void UDPSimulation::on_join_btn_user_2_clicked()
             m_err_msg->showMessage(t_msg);
 
         }
-    } else
+    } else if (is_join_flag[1] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
-        //m_user_list[QString::number(ui->input_id_user_2->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_2->value())].m_user->PTTpressed();
+        ui->join_btn_user_2->setText(QString("stop sending"));
+        is_join_flag[1] = 2;
+
+    }else if (is_join_flag[1] == 2)
+    {
+        //PTT released
+        m_user_list[QString::number(ui->input_id_user_2->value())].m_user->PTTreleased();
+        ui->join_btn_user_2->setText(QString("send"));
+        is_join_flag[1] = 1;
+
     }
 }
 
 void UDPSimulation::on_join_btn_user_3_clicked()
 {
-    if(is_join_flag[2])
+    if(is_join_flag[2] == 0)
     {
         int t_id = ui->input_id_user_3->value();
-        User* t_user = new User(t_id);
+        User* t_user = new User(t_id, this);
 
         if(m_server.join(t_user))
         {
@@ -126,27 +143,36 @@ void UDPSimulation::on_join_btn_user_3_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_3;
 
             m_count_user++;
-            is_join_flag[2] = false;
+            is_join_flag[2] = 1;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-    }else
+    }else if (is_join_flag[2] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
-        //m_user_list[QString::number(ui->input_id_user_3->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
-    }
+        m_user_list[QString::number(ui->input_id_user_3->value())].m_user->PTTpressed();
+        ui->join_btn_user_3->setText(QString("stop sending"));
+        is_join_flag[2] = 2;
+
+    }else if (is_join_flag[2] == 2)
+        {
+            //PTT released
+            m_user_list[QString::number(ui->input_id_user_3->value())].m_user->PTTreleased();
+            ui->join_btn_user_3->setText(QString("send"));
+            is_join_flag[2] = 1;
+
+        }
 }
 
 void UDPSimulation::on_join_btn_user_4_clicked()
 {
-    if(is_join_flag[3])
+    if(is_join_flag[3] == 0)
     {
         int t_id = ui->input_id_user_4->value();
-        User* t_user = new User(t_id);
+        User* t_user = new User(t_id, this);
 
         if(m_server.join(t_user))
         {
@@ -163,27 +189,35 @@ void UDPSimulation::on_join_btn_user_4_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_4;
 
             m_count_user++;
-            is_join_flag[3] = false;
+            is_join_flag[3] = 1;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-    }else
+    }else if (is_join_flag[3] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
-        //m_user_list[QString::number(ui->input_id_user_4->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_4->value())].m_user->PTTpressed();
+        ui->join_btn_user_4->setText(QString("stop sending"));
+        is_join_flag[3] = 2;
+    }else if (is_join_flag[3] == 2)
+    {
+        //PTT released
+        m_user_list[QString::number(ui->input_id_user_4->value())].m_user->PTTreleased();
+        ui->join_btn_user_4->setText(QString("send"));
+        is_join_flag[3] = 1;
+
     }
 }
 
 void UDPSimulation::on_join_btn_user_5_clicked()
 {
-    if(is_join_flag[4])
+    if(is_join_flag[4] == 0)
     {
         int t_id = ui->input_id_user_5->value();
-        User* t_user = new User(t_id);
+        User* t_user = new User(t_id, this);
 
         if(m_server.join(t_user))
         {
@@ -200,18 +234,26 @@ void UDPSimulation::on_join_btn_user_5_clicked()
             m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_5;
 
             m_count_user++;
-            is_join_flag[4] = false;
+            is_join_flag[4] = 1;
         } else
         {
             delete t_user;
             QString t_msg = "The selected ID is already used";
             m_err_msg->showMessage(t_msg);
         }
-    } else // when it becomes send button
+    } else if (is_join_flag[4] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
-        //m_user_list[QString::number(ui->input_id_user_5->value())].m_user->send(priority::MSG_TYPE::MSG, msg);
+        m_user_list[QString::number(ui->input_id_user_5->value())].m_user->PTTpressed();
+        ui->join_btn_user_5->setText(QString("stop sending"));
+        is_join_flag[4] = 2;
+    }else if(is_join_flag[4] == 2)
+    {
+        //PTT released
+        m_user_list[QString::number(ui->input_id_user_5->value())].m_user->PTTreleased();
+        ui->join_btn_user_5->setText(QString("send"));
+        is_join_flag[4] = 1;
+
     }
 }
 
@@ -355,33 +397,50 @@ void UDPSimulation::receive_from_users(int i_id, QString& i_string)
 
 void UDPSimulation::on_multiple_send_btn_clicked()
 {
-    QList<User*> t_user_list;
-    QList<User*> t_sorted_user_list;
 
-    for(USER_GUI el : m_user_list)
-        if(Qt::CheckState::Checked == el.m_GUI_send_flag->checkState())
+    if(multiple_send_status){
+        ui->multiple_send_btn->setText("stop sending");
+        QList<User*> t_user_list;
+        QList<User*> t_sorted_user_list;
+
+        for(USER_GUI el : m_user_list)
+            if(Qt::CheckState::Checked == el.m_GUI_send_flag->checkState())
+            {
+                t_user_list.append(el.m_user);
+                t_sorted_user_list.append(nullptr);
+            }
+
+        //choose a random order for the users to send
+        for(User* el : t_user_list)
         {
-            t_user_list.append(el.m_user);
-            t_sorted_user_list.append(nullptr);
+              int t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
+
+              while(t_sorted_user_list.at(t_rnd_index) != nullptr)
+              {
+                  t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
+              }
+              t_sorted_user_list[t_rnd_index] = el;
         }
 
-    //choose a random order for the users to send
-    for(User* el : t_user_list)
-    {
-          int t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
+        QString msg = ui->input_msg->text();
 
-          while(t_sorted_user_list.at(t_rnd_index) != nullptr)
-          {
-              t_rnd_index = QRandomGenerator::global()->generate() % t_sorted_user_list.size();
-          }
-          t_sorted_user_list[t_rnd_index] = el;
-    }
+        for(User* u : t_sorted_user_list){
+            u->PTTpressed();
+        }
 
-    QString msg = ui->input_msg->text();
-    for(User* user : t_sorted_user_list){
-        user->PTTpressed();
+        multiple_send_status = false;
+
+    }else{
+        //PTT released event just for the user who is sending
+        ui->multiple_send_btn->setText("multiple send");
+        for(USER_GUI el : m_user_list){
+            if( el.m_user->get_is_sending() == 1){
+                el.m_user->PTTreleased();
+                break;
+            }
+        }
+        multiple_send_status = true;
     }
-        //user->send(priority::MSG_TYPE::MSG, msg);
 
 }
 

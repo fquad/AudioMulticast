@@ -1,7 +1,10 @@
 #include "priority.h"
+#include "udpsimulation.h"
+#include "ui_udpsimulation.h"
 
-priority::priority(int id)
+priority::priority(int id, UDPSimulation *w)
 {
+    m_window = w;
     m_id = id;
     m_count_call_tout = 0;
 }
@@ -9,6 +12,12 @@ priority::priority(int id)
 void priority::reproduce_audio(QString data)
 {
     //play the received audio on the speakers
+
+    //test version with text messages
+    QString id = data.mid(0,3);
+    QString str = QString::number(m_id) + " : received from" + id + " > " + data.mid(3,-1);
+    m_window->ui->log->append(str);
+
     qDebug() << "received audio : " << data;
 }
 
@@ -16,12 +25,12 @@ void priority::send_audio()
 {
     //capture audio from the microphone and send it
 
-    //will be sobstituted by a QByteArray with  the audio data
-    QString audioData = "bzzbzz";
+    //test version with text messages
+    QString audioData = QString::number(m_id) + m_window->ui->input_msg->text();
 
     send(MSG_TYPE::AUDIO, audioData);
 
-    qDebug() << "received audio : " << audioData;
+    //qDebug() << "received audio : " << audioData;
 }
 
 void priority::send_RTS()
@@ -77,7 +86,7 @@ void priority::check_list(){
 }
 
 void priority::send_user_id(){
-    qDebug() << QString::number(m_id) << " sent is id";
+    //qDebug() << QString::number(m_id) << " sent is id";
     send(MSG_TYPE::UPDATE_NAME, QString::number(m_id));
 }
 
@@ -125,14 +134,20 @@ bool priority::evaluate_list()
     qDebug() << "   n permission: " + QString::number(n_permission);
     qDebug() << "   n user      : " + QString::number(n_user);
 
+    if((n_user - 1) < 1){
+        //No one in the group
+        qDebug() << "permission denied";
+        qDebug() << "---------------";
+        return false;
+    }
 
     if( 1 / n_sender  <= n_permission / (n_user - 1) ){
         qDebug() << "permission granted";
         qDebug() << "---------------";
+        send_audio();
         return true;
     }
-    qDebug() << "permission denied";
-    qDebug() << "---------------";
+
     return false;
 }
 
@@ -201,4 +216,12 @@ void priority::send(MSG_TYPE i_type, QString data){
 
 int priority::getId(){
     return m_id;
+}
+
+void priority::connect_to_group(){
+
+}
+
+void priority::disconnect_from_group(){
+
 }

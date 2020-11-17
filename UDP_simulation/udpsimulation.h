@@ -26,6 +26,7 @@ class UDPSimulation : public QMainWindow
 public:
     UDPSimulation(QWidget *parent = nullptr);
     ~UDPSimulation();
+    Ui::UDPSimulation *ui;
 
 private slots:
     void on_join_btn_user_1_clicked();
@@ -52,8 +53,10 @@ private slots:
     void receive_updated_list(User*);
     void receive_from_users(int, QString&);
 
+
+
 private:
-    Ui::UDPSimulation *ui;
+
     QErrorMessage* m_err_msg;
 
     Server m_server;
@@ -70,6 +73,7 @@ private:
 
     int m_count_user = 0;
 
-    bool is_join_flag[N_USER];
+    int is_join_flag[N_USER];
+    bool multiple_send_status;
 };
 #endif // UDPSIMULATION_H
