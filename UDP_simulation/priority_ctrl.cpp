@@ -19,12 +19,12 @@ priority_ctrl::~priority_ctrl()
     qDebug() << "FSM deleted";
 }
 
-void priority_ctrl::set_user_list(QMap<QString, int>* i_user_list_ptr)
+void priority_ctrl::set_user_list(QMap<quint8, int>* i_user_list_ptr)
 {
     m_priority->set_user_list(i_user_list_ptr);
 }
 
-void priority_ctrl::process(EVENT i_e, QString i_data)
+void priority_ctrl::process(EVENT i_e, QByteArray i_data)
 {
 
     if(m_ingroup == true){

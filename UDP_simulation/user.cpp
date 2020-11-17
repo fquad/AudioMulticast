@@ -24,8 +24,8 @@ User::~User()
 void User::connect_user(User* i_user)
 {
     //TODO just needed in the simulation enviroment
-    connect(FSM->m_priority, SIGNAL(send_signal(QString&)),
-            i_user, SLOT(receive(QString&)));
+    connect(FSM->m_priority, SIGNAL(send_signal(QByteArray&)),
+            i_user, SLOT(receive(QByteArray&)));
     FSM->process(EVENT::E_CONNECT);
 }
 
@@ -49,7 +49,7 @@ void User::timeout_send_name()
         emit update_gui_list(this);
     }else{
         //send every 1 second the user id for updating the list
-        QString t_name = QString::number(m_id);
+        QByteArray t_name = QByteArray::number(m_id);
         FSM->process(EVENT::E_SEND_UPDATE, t_name);
     }
 }
@@ -67,10 +67,12 @@ bool User::get_is_sending(){
     return  FSM->get_is_sending();
 }
 
-void User::receive(QString& i_msg)
+void User::receive(QByteArray& i_msg)
 {
-    int t_type = i_msg.mid(0,1).toInt();
-    QString t_msg = i_msg.mid(1,-1);
+    //int t_type = i_msg.mid(0,1).toInt();
+    int t_type = i_msg.at(0);
+
+    QByteArray t_msg = i_msg.mid(1,-1);
 
     qDebug() << m_id
              << "received type: "

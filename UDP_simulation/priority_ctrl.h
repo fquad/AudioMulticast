@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDebug>
 #include <QTimer>
+#include <QByteArray>
 
 const int t_timeout = 100;
 const int user_update_timeout = 1000;
@@ -35,8 +36,8 @@ public:
     ~priority_ctrl();
 
     bool get_is_sending();
-    void process(EVENT e, QString data = nullptr);
-    void set_user_list(QMap<QString, int>* i_user_list_ptr);
+    void process(EVENT e, QByteArray data = nullptr);
+    void set_user_list(QMap<quint8, int>* i_user_list_ptr);
 
     //TODO m_priority should be private or protected
     priority* m_priority;

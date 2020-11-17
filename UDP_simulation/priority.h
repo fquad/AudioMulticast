@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDebug>
+#include <QByteArray>
 
 class UDPSimulation;
 
@@ -26,20 +27,20 @@ public:
     void connect_to_group();
     void disconnect_from_group();
 
-    void reproduce_audio(QString data);
+    void reproduce_audio(QByteArray data);
 
     void send_audio();
     void send_RTS();
-    void answer_RTS(bool answer, QString requesterId);
+    void answer_RTS(bool answer, QByteArray requesterId);
 
     bool evaluate_list();
 
     void check_list();
-    void update_users_list(QString& i_user_name);
+    void update_users_list(QByteArray& i_user_name);
     void send_user_id();
 
-    void add_RTS(QString data);
-    void add_answer_to_list(QString data);
+    void add_RTS(QByteArray data);
+    void add_answer_to_list(QByteArray data);
 
     void clear_request_list();
     void clear_answer_list();
@@ -48,24 +49,24 @@ public:
 
 
 
-    inline void set_user_list(QMap<QString, int>* i_user_list_ptr)
+    inline void set_user_list(QMap<quint8, int>* i_user_list_ptr)
     { m_connected_user = i_user_list_ptr; }
 
 private:
     UDPSimulation *m_window;
-    int m_id;
+    quint8 m_id;
     int m_count_call_tout;
-    void send(MSG_TYPE i_type, QString data);
+    void send(MSG_TYPE i_type, QByteArray data);
 
 
-    QMap<QString, int>* m_connected_user;
-    QMap<QString, int> m_connected_user_prev;
+    QMap<quint8, int>* m_connected_user;
+    QMap<quint8, int> m_connected_user_prev;
 
-    QList<QString> m_request_list;
+    QList<quint8> m_request_list;
     QList<int> m_answer_list;
 
 signals:
-    void send_signal(QString& o_msg);
+    void send_signal(QByteArray& o_msg);
 };
 
 #endif // PRIORITY_H

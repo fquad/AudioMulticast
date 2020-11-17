@@ -51,7 +51,8 @@ private slots:
     void on_btn_log_clear_clicked();
 
     void receive_updated_list(User*);
-    void receive_from_users(int, QString&);
+
+    void receive_from_users(int, QByteArray&);
 
 
 
@@ -69,7 +70,7 @@ private:
         QCheckBox* m_GUI_send_flag;
     };
 
-    QMap<QString, USER_GUI> m_user_list;
+    QMap<quint8, USER_GUI> m_user_list;
 
     int m_count_user = 0;
 

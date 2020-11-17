@@ -9,13 +9,18 @@ priority::priority(int id, UDPSimulation *w)
     m_count_call_tout = 0;
 }
 
-void priority::reproduce_audio(QString data)
+void priority::reproduce_audio(QByteArray data)
 {
     //play the received audio on the speakers
 
     //test version with text messages
-    QString id = data.mid(0,3);
-    QString str = QString::number(m_id) + " : received from" + id + " > " + data.mid(3,-1);
+    quint8 id = data.at(0);
+    QString str = QString::number(m_id)
+            + " : received from"
+            +  QString::number(id)
+            + " > "
+            + data.mid(1,-1);
+
     m_window->ui->log->append(str);
 
     qDebug() << "received audio : " << data;
@@ -26,7 +31,9 @@ void priority::send_audio()
     //capture audio from the microphone and send it
 
     //test version with text messages
-    QString audioData = QString::number(m_id) + m_window->ui->input_msg->text();
+    QByteArray audioData;
+    audioData.append(m_id);
+    audioData.append(m_window->ui->input_msg->text().toUtf8());
 
     send(MSG_TYPE::AUDIO, audioData);
 
@@ -36,24 +43,26 @@ void priority::send_audio()
 void priority::send_RTS()
 {
     //send a request to start sending audio
+    QByteArray msg;
+    msg.append(m_id);
 
-    QString id = QString::number(m_id);
     qDebug() << m_id
              << "want to send";
-    send(MSG_TYPE::REQUEST,id);
+    send(MSG_TYPE::REQUEST,msg);
 }
 
-void priority::update_users_list(QString& i_user_name)
+void priority::update_users_list(QByteArray& i_user_name)
 {
     /*update the list with all users present in the group by checking
     * if the received id is in the list or not
     */
+    quint8 id = i_user_name.at(0);
 
-    if(!m_connected_user->contains(i_user_name))
+    if(!m_connected_user->contains(id))
     {
         //user id is not in the users list
-        (*m_connected_user)[i_user_name] = 1;
-        m_connected_user_prev[i_user_name] = 0;
+        (*m_connected_user)[id] = 1;
+        m_connected_user_prev[id] = 0;
 
         //QString user_to_update = QString::number(m_id);
 
@@ -61,7 +70,7 @@ void priority::update_users_list(QString& i_user_name)
     } else
     {
         //user is already in the users list
-        m_connected_user_prev[i_user_name]++;
+        m_connected_user_prev[id]++;
     }
 }
 
@@ -70,7 +79,7 @@ void priority::check_list(){
     //qDebug() << "----------------------------------------";
 
     //check if a value was not updated
-    for(QString key : m_connected_user->keys())
+    for(quint8 key : m_connected_user->keys())
     {
         if((*m_connected_user)[key] == m_connected_user_prev[key])
         {
@@ -87,16 +96,20 @@ void priority::check_list(){
 
 void priority::send_user_id(){
     //qDebug() << QString::number(m_id) << " sent is id";
-    send(MSG_TYPE::UPDATE_NAME, QString::number(m_id));
+    QByteArray msg;
+    msg.append(m_id);
+    send(MSG_TYPE::UPDATE_NAME, msg);
 }
 
-void priority::answer_RTS(bool answer, QString requesterId)
+void priority::answer_RTS(bool answer, QByteArray requesterId)
 {
     // answer to the received request to send
     //TODO errore non bisogna inviare m_id ma l'id di chi ha fatto la richiesta
 
     //check if the id of the user who made the request is valid
-    if(requesterId.toInt() > 0 && requesterId.toInt() < 255){
+    quint8 r_id = requesterId.at(0);
+
+    if(r_id > 0 && r_id < 255){
 
         qDebug() << QString::number(m_id)
                  << " answered : "
@@ -104,7 +117,9 @@ void priority::answer_RTS(bool answer, QString requesterId)
                  << " to : "
                  << requesterId;
 
-        QString msg = requesterId + QString::number(answer);
+        QByteArray msg;
+        msg.append(r_id);
+        msg.append(answer);
 
         send(MSG_TYPE::ANSWER, msg);
     }
@@ -151,10 +166,10 @@ bool priority::evaluate_list()
     return false;
 }
 
-void priority::add_RTS(QString data){
+void priority::add_RTS(QByteArray data){
     //add the received Request To Send to the list with all the requests
 
-    QString id = data.mid(0,3);
+    quint8 id = data.at(0);
     qDebug() << m_id
              << " added: "
              << id
@@ -163,13 +178,13 @@ void priority::add_RTS(QString data){
     m_request_list.append(id);
 }
 
-void priority::add_answer_to_list(QString data){
+void priority::add_answer_to_list(QByteArray data){
     // add the received answer the the lists of all answers
 
-    QString id = data.mid(0,3);
-    int answer = data.mid(3,1).toInt();
+    quint8 id = data.at(0);
+    int answer = data.at(1);
     // check that the asnwer is to the user request
-    if(id == QString::number(m_id)){
+    if(id == m_id){
         m_answer_list.append(answer);
 
         qDebug() << m_id
@@ -188,12 +203,14 @@ void priority::clear_answer_list()
     m_answer_list.clear();
 }
 
-void priority::send(MSG_TYPE i_type, QString data){
+void priority::send(MSG_TYPE i_type, QByteArray data){
     // send the given message on a comunication medium
     // currently to the simulated users
     // in the final implementation the message will be sent using the multicast protocol
 
-    QString t_msg_to_users = QString::number(i_type) + data;
+    QByteArray t_msg_to_users;
+    t_msg_to_users.append(i_type);
+    t_msg_to_users.append(data);
     emit send_signal(t_msg_to_users);
 
     //TODO connect to receive function in user class

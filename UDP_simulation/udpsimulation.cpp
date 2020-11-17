@@ -38,16 +38,16 @@ void UDPSimulation::on_join_btn_user_1_clicked()
         if(m_server.join(t_user))
         {
             connect(t_user, SIGNAL(update_gui_list(User*)), this, SLOT(receive_updated_list(User*)));
-            connect(t_user, SIGNAL(send_to_server(int, QString&)), this, SLOT(receive_from_users(int, QString&)));
+            connect(t_user, SIGNAL(send_to_server(int, QByteArray&)), this, SLOT(receive_from_users(int, QByteArray&)));
 
             ui->input_id_user_1->setEnabled(false);
             ui->quit_btn_user_1->setEnabled(true);
             ui->join_btn_user_1->setText(QString("send"));
 
-            m_user_list[QString::number(t_id)].m_user = t_user;
-            m_user_list[QString::number(t_id)].m_GUI_id = ui->input_id_user_1;
-            m_user_list[QString::number(t_id)].m_GUI_user_list = ui->list_user_1;
-            m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_1;
+            m_user_list[t_id].m_user = t_user;
+            m_user_list[t_id].m_GUI_id = ui->input_id_user_1;
+            m_user_list[t_id].m_GUI_user_list = ui->list_user_1;
+            m_user_list[t_id].m_GUI_send_flag = ui->check_box_user_1;
 
             m_count_user++;
             is_join_flag[0] = 1;
@@ -60,13 +60,13 @@ void UDPSimulation::on_join_btn_user_1_clicked()
     } else if (is_join_flag[0] == 1){
         //PTT pressed
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTpressed();
+        m_user_list[ui->input_id_user_1->value()].m_user->PTTpressed();
         ui->join_btn_user_1->setText(QString("stop sending"));
         is_join_flag[0] = 2;
 
     }else if (is_join_flag[0] == 2){
         //PTT released
-        m_user_list[QString::number(ui->input_id_user_1->value())].m_user->PTTreleased();
+        m_user_list[ui->input_id_user_1->value()].m_user->PTTreleased();
         ui->join_btn_user_1->setText(QString("send"));
         is_join_flag[0] = 1;
 
@@ -83,16 +83,16 @@ void UDPSimulation::on_join_btn_user_2_clicked()
         if(m_server.join(t_user))
         {
             connect(t_user, SIGNAL(update_gui_list(User*)), this, SLOT(receive_updated_list(User*)));
-            connect(t_user, SIGNAL(send_to_server(int, QString&)), this, SLOT(receive_from_users(int, QString&)));
+            connect(t_user, SIGNAL(send_to_server(int, QByteArray&)), this, SLOT(receive_from_users(int, QByteArray&)));
 
             ui->input_id_user_2->setEnabled(false);
             ui->quit_btn_user_2->setEnabled(true);
             ui->join_btn_user_2->setText(QString("send"));
 
-            m_user_list[QString::number(t_id)].m_user = t_user;
-            m_user_list[QString::number(t_id)].m_GUI_id = ui->input_id_user_2;
-            m_user_list[QString::number(t_id)].m_GUI_user_list = ui->list_user_2;
-            m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_2;
+            m_user_list[t_id].m_user = t_user;
+            m_user_list[t_id].m_GUI_id = ui->input_id_user_2;
+            m_user_list[t_id].m_GUI_user_list = ui->list_user_2;
+            m_user_list[t_id].m_GUI_send_flag = ui->check_box_user_2;
 
             m_count_user++;
             is_join_flag[1] = 1;
@@ -107,14 +107,14 @@ void UDPSimulation::on_join_btn_user_2_clicked()
     } else if (is_join_flag[1] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_2->value())].m_user->PTTpressed();
+        m_user_list[ui->input_id_user_2->value()].m_user->PTTpressed();
         ui->join_btn_user_2->setText(QString("stop sending"));
         is_join_flag[1] = 2;
 
     }else if (is_join_flag[1] == 2)
     {
         //PTT released
-        m_user_list[QString::number(ui->input_id_user_2->value())].m_user->PTTreleased();
+        m_user_list[ui->input_id_user_2->value()].m_user->PTTreleased();
         ui->join_btn_user_2->setText(QString("send"));
         is_join_flag[1] = 1;
 
@@ -131,16 +131,16 @@ void UDPSimulation::on_join_btn_user_3_clicked()
         if(m_server.join(t_user))
         {
             connect(t_user, SIGNAL(update_gui_list(User*)), this, SLOT(receive_updated_list(User*)));
-            connect(t_user, SIGNAL(send_to_server(int, QString&)), this, SLOT(receive_from_users(int, QString&)));
+            connect(t_user, SIGNAL(send_to_server(int, QByteArray&)), this, SLOT(receive_from_users(int, QByteArray&)));
 
             ui->input_id_user_3->setEnabled(false);
             ui->quit_btn_user_3->setEnabled(true);
             ui->join_btn_user_3->setText(QString("send"));
 
-            m_user_list[QString::number(t_id)].m_user = t_user;
-            m_user_list[QString::number(t_id)].m_GUI_id = ui->input_id_user_3;
-            m_user_list[QString::number(t_id)].m_GUI_user_list = ui->list_user_3;
-            m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_3;
+            m_user_list[t_id].m_user = t_user;
+            m_user_list[t_id].m_GUI_id = ui->input_id_user_3;
+            m_user_list[t_id].m_GUI_user_list = ui->list_user_3;
+            m_user_list[t_id].m_GUI_send_flag = ui->check_box_user_3;
 
             m_count_user++;
             is_join_flag[2] = 1;
@@ -153,14 +153,14 @@ void UDPSimulation::on_join_btn_user_3_clicked()
     }else if (is_join_flag[2] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_3->value())].m_user->PTTpressed();
+        m_user_list[ui->input_id_user_3->value()].m_user->PTTpressed();
         ui->join_btn_user_3->setText(QString("stop sending"));
         is_join_flag[2] = 2;
 
     }else if (is_join_flag[2] == 2)
         {
             //PTT released
-            m_user_list[QString::number(ui->input_id_user_3->value())].m_user->PTTreleased();
+            m_user_list[ui->input_id_user_3->value()].m_user->PTTreleased();
             ui->join_btn_user_3->setText(QString("send"));
             is_join_flag[2] = 1;
 
@@ -177,16 +177,16 @@ void UDPSimulation::on_join_btn_user_4_clicked()
         if(m_server.join(t_user))
         {
             connect(t_user, SIGNAL(update_gui_list(User*)), this, SLOT(receive_updated_list(User*)));
-            connect(t_user, SIGNAL(send_to_server(int, QString&)), this, SLOT(receive_from_users(int, QString&)));
+            connect(t_user, SIGNAL(send_to_server(int, QByteArray&)), this, SLOT(receive_from_users(int, QByteArray&)));
 
             ui->input_id_user_4->setEnabled(false);
             ui->quit_btn_user_4->setEnabled(true);
             ui->join_btn_user_4->setText(QString("send"));
 
-            m_user_list[QString::number(t_id)].m_user = t_user;
-            m_user_list[QString::number(t_id)].m_GUI_id = ui->input_id_user_4;
-            m_user_list[QString::number(t_id)].m_GUI_user_list = ui->list_user_4;
-            m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_4;
+            m_user_list[t_id].m_user = t_user;
+            m_user_list[t_id].m_GUI_id = ui->input_id_user_4;
+            m_user_list[t_id].m_GUI_user_list = ui->list_user_4;
+            m_user_list[t_id].m_GUI_send_flag = ui->check_box_user_4;
 
             m_count_user++;
             is_join_flag[3] = 1;
@@ -199,13 +199,13 @@ void UDPSimulation::on_join_btn_user_4_clicked()
     }else if (is_join_flag[3] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_4->value())].m_user->PTTpressed();
+        m_user_list[ui->input_id_user_4->value()].m_user->PTTpressed();
         ui->join_btn_user_4->setText(QString("stop sending"));
         is_join_flag[3] = 2;
     }else if (is_join_flag[3] == 2)
     {
         //PTT released
-        m_user_list[QString::number(ui->input_id_user_4->value())].m_user->PTTreleased();
+        m_user_list[ui->input_id_user_4->value()].m_user->PTTreleased();
         ui->join_btn_user_4->setText(QString("send"));
         is_join_flag[3] = 1;
 
@@ -222,16 +222,16 @@ void UDPSimulation::on_join_btn_user_5_clicked()
         if(m_server.join(t_user))
         {
             connect(t_user, SIGNAL(update_gui_list(User*)), this, SLOT(receive_updated_list(User*)));
-            connect(t_user, SIGNAL(send_to_server(int, QString&)), this, SLOT(receive_from_users(int, QString&)));
+            connect(t_user, SIGNAL(send_to_server(int, QByteArray&)), this, SLOT(receive_from_users(int, QByteArray&)));
 
             ui->input_id_user_5->setEnabled(false);
             ui->quit_btn_user_5->setEnabled(true);
             ui->join_btn_user_5->setText(QString("send"));
 
-            m_user_list[QString::number(t_id)].m_user = t_user;
-            m_user_list[QString::number(t_id)].m_GUI_id = ui->input_id_user_5;
-            m_user_list[QString::number(t_id)].m_GUI_user_list = ui->list_user_5;
-            m_user_list[QString::number(t_id)].m_GUI_send_flag = ui->check_box_user_5;
+            m_user_list[t_id].m_user = t_user;
+            m_user_list[t_id].m_GUI_id = ui->input_id_user_5;
+            m_user_list[t_id].m_GUI_user_list = ui->list_user_5;
+            m_user_list[t_id].m_GUI_send_flag = ui->check_box_user_5;
 
             m_count_user++;
             is_join_flag[4] = 1;
@@ -244,13 +244,13 @@ void UDPSimulation::on_join_btn_user_5_clicked()
     } else if (is_join_flag[4] == 1)
     {
         QString msg = ui->input_msg->text();
-        m_user_list[QString::number(ui->input_id_user_5->value())].m_user->PTTpressed();
+        m_user_list[ui->input_id_user_5->value()].m_user->PTTpressed();
         ui->join_btn_user_5->setText(QString("stop sending"));
         is_join_flag[4] = 2;
     }else if(is_join_flag[4] == 2)
     {
         //PTT released
-        m_user_list[QString::number(ui->input_id_user_5->value())].m_user->PTTreleased();
+        m_user_list[ui->input_id_user_5->value()].m_user->PTTreleased();
         ui->join_btn_user_5->setText(QString("send"));
         is_join_flag[4] = 1;
 
@@ -259,7 +259,7 @@ void UDPSimulation::on_join_btn_user_5_clicked()
 
 void UDPSimulation::on_quit_btn_user_1_clicked()
 {
-    QString t_id = ui->input_id_user_1->text();
+    quint8 t_id = ui->input_id_user_1->text().toUInt();
 
     ui->input_id_user_1->setValue(0);
     ui->list_user_1->clear();
@@ -278,7 +278,7 @@ void UDPSimulation::on_quit_btn_user_1_clicked()
 
 void UDPSimulation::on_quit_btn_user_2_clicked()
 {
-    QString t_id = ui->input_id_user_2->text();
+    quint8 t_id = ui->input_id_user_2->text().toUInt();
 
     ui->input_id_user_2->setValue(0);
     ui->list_user_2->clear();
@@ -297,7 +297,7 @@ void UDPSimulation::on_quit_btn_user_2_clicked()
 
 void UDPSimulation::on_quit_btn_user_3_clicked()
 {
-    QString t_id = ui->input_id_user_3->text();
+    quint8 t_id = ui->input_id_user_3->text().toUInt();
 
     ui->input_id_user_3->setValue(0);
     ui->list_user_3->clear();
@@ -316,7 +316,7 @@ void UDPSimulation::on_quit_btn_user_3_clicked()
 
 void UDPSimulation::on_quit_btn_user_4_clicked()
 {
-    QString t_id = ui->input_id_user_4->text();
+    quint8 t_id = ui->input_id_user_4->text().toUInt();
 
     ui->input_id_user_4->setValue(0);
     ui->list_user_4->clear();
@@ -335,7 +335,7 @@ void UDPSimulation::on_quit_btn_user_4_clicked()
 
 void UDPSimulation::on_quit_btn_user_5_clicked()
 {
-    QString t_id = ui->input_id_user_5->text();
+    quint8 t_id = ui->input_id_user_5->text().toUInt();
 
     ui->input_id_user_5->setValue(0);
     ui->list_user_5->clear();
@@ -354,46 +354,67 @@ void UDPSimulation::on_quit_btn_user_5_clicked()
 
 void UDPSimulation::on_input_id_user_1_valueChanged(int arg1)
 {
-    ui->join_btn_user_1->setEnabled(true);
+    if(arg1 > 0){
+        ui->join_btn_user_1->setEnabled(true);
+    }else{
+        ui->join_btn_user_1->setEnabled(false);
+    }
 }
 
 void UDPSimulation::on_input_id_user_2_valueChanged(int arg1)
 {
-    ui->join_btn_user_2->setEnabled(true);
+    if(arg1 > 0){
+        ui->join_btn_user_2->setEnabled(true);
+    }else{
+        ui->join_btn_user_2->setEnabled(false);
+    }
 }
 
 void UDPSimulation::on_input_id_user_3_valueChanged(int arg1)
 {
-    ui->join_btn_user_3->setEnabled(true);
+    if(arg1 > 0){
+        ui->join_btn_user_3->setEnabled(true);
+    }else{
+        ui->join_btn_user_3->setEnabled(false);
+    }
 }
 
 void UDPSimulation::on_input_id_user_4_valueChanged(int arg1)
 {
-    ui->join_btn_user_4->setEnabled(true);
+    if(arg1 > 0){
+        ui->join_btn_user_4->setEnabled(true);
+    }else{
+        ui->join_btn_user_4->setEnabled(false);
+    }
 }
 
 void UDPSimulation::on_input_id_user_5_valueChanged(int arg1)
 {
-    ui->join_btn_user_5->setEnabled(true);
+    if(arg1 > 0){
+        ui->join_btn_user_5->setEnabled(true);
+    }else{
+        ui->join_btn_user_5->setEnabled(false);
+    }
 }
 
 void UDPSimulation::receive_updated_list(User* i_user)
 {
-    USER_GUI t_user = m_user_list[QString::number(i_user->get_id())];
+    USER_GUI t_user = m_user_list[i_user->get_id()];
 
     t_user.m_GUI_user_list->clear();
 
-    for(QString user : t_user.m_user->get_connected_user_list().keys())
+    for(quint8 user : t_user.m_user->get_connected_user_list().keys())
     {
-        t_user.m_GUI_user_list->addItem(user);
+        t_user.m_GUI_user_list->addItem(QString::number(user));
     }
 }
 
-void UDPSimulation::receive_from_users(int i_id, QString& i_string)
+void UDPSimulation::receive_from_users(int i_id, QByteArray& i_string)
 {
     QString msg = QString("[server]: from (") + QString::number(i_id) + QString(") ") + i_string;
     ui->log->append(msg);
 }
+
 
 void UDPSimulation::on_multiple_send_btn_clicked()
 {
