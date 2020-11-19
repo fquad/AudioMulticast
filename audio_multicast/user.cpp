@@ -76,17 +76,19 @@ bool User::get_is_sending()
 
 void User::receive(QByteArray& i_msg)
 {
-    //int t_type = i_msg.mid(0,1).toInt();
     int t_type = i_msg.at(0);
+    int sender_id = i_msg.at(1);
+
+
     QByteArray t_msg = i_msg.mid(1,-1);
 
-    if(t_msg.at(0) != m_id)
+    if(sender_id != m_id)
     {
         qDebug() << m_id
                  << "received type: "
                  << i_msg.mid(0,1)
                  << " msg: "
-                 << i_msg.mid(1,-1);
+                 << i_msg.mid(1,-1).toHex();
 
         switch(t_type)
         {

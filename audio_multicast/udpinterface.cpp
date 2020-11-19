@@ -38,13 +38,12 @@ void UDPInterface::processPendingDatagrams()
     QByteArray data;
 
     // using QUdpSocket::readDatagram (API since Qt 4)
-    while (udpSocket4.hasPendingDatagrams()) {
+    while (udpSocket4.hasPendingDatagrams())
+    {
         data.resize(int(udpSocket4.pendingDatagramSize()));
         udpSocket4.readDatagram(data.data(), data.size());
 
         emit new_packet_ready(data);
-
-        qDebug() << "packet size: " << data.size() << " | " << data.data();
     }
 }
 

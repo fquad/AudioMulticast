@@ -89,6 +89,8 @@ void Multicast::check_list()
         {
             m_connected_user->remove(key);
             m_connected_user_prev.remove(key);
+
+            emit m_user->update_gui_list();
         }
         //else qDebug() << key;
     }
@@ -124,6 +126,8 @@ void Multicast::answer_RTS(bool i_answer, QByteArray i_requester_id)
                  << i_requester_id;
 
         QByteArray msg;
+
+        msg.append(m_id);
         msg.append(r_id);
         msg.append(i_answer);
 
@@ -173,6 +177,9 @@ bool Multicast::evaluate_list()
         return true;
     }
 
+    qDebug() << "permission denied";
+    qDebug() << "---------------";
+
     return false;
 }
 
@@ -192,8 +199,8 @@ void Multicast::add_RTS(QByteArray i_data)
 void Multicast::add_answer_to_list(QByteArray i_data)
 {
     // add the received answer the the lists of all answers
-    quint8 id = i_data.at(0);
-    int answer = i_data.at(1);
+    quint8 id = i_data.at(1);
+    int answer = i_data.at(2);
 
     // check that the asnwer is to the user request
     if(id == m_id)
