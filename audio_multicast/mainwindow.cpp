@@ -8,7 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , m_user(new User(8))
+    , m_user(new User())
     , ui(new Ui::MainWindow)
     , m_is_join(true)
 {

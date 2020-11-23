@@ -13,7 +13,7 @@ class User: public QObject
 
 //--------------------------------------- public
 public:
-    User(int m_id);
+    User();
     ~User();
     void PTT_pressed();
     void PTT_released();
@@ -21,14 +21,16 @@ public:
     bool join_group(QHostAddress& i_IP, quint16 i_port);
     bool quit_group();
 
-    inline int get_id() { return m_id; }
+    inline int get_ID() { return m_ID; }
+    inline void set_ID(quint8 i_ID) { m_ID = i_ID; }
     inline QMap<quint8, int>& get_connected_user_list() { return m_connected_user; }
+
     inline quint16 get_port() { return m_port; };
     inline QHostAddress& get_IP() { return m_IP; };
 
 //--------------------------------------- private
 private:
-    int m_id;
+    int m_ID;
 
     MulticastCtrl* m_FSM;
 

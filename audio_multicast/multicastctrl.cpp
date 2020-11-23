@@ -7,11 +7,13 @@ MulticastCtrl::MulticastCtrl(User* i_user) :
   m_multicast(new Multicast(i_user)),
   m_ingroup(false),
   m_is_sending(false),
-  m_current_state(state_nogroup)
+  m_current_state(state_nogroup),
+  m_first_time(true)
 {
     //connect the timers to their callback
-    connect(&rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
-    connect(&cts_timer, SIGNAL(timeout()), this, SLOT(cts_timeout()));
+    connect(&m_rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
+    connect(&m_cts_timer, SIGNAL(timeout()), this, SLOT(cts_timeout()));
+    connect(&m_select_ID_timer, SIGNAL(timeout()), this, SLOT(select_ID_timeout()));
 }
 
 MulticastCtrl::~MulticastCtrl()
@@ -26,39 +28,46 @@ void MulticastCtrl::set_user_list(QMap<quint8, int>* i_user_list_ptr)
 
 void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
 {
-
     if(m_ingroup == true)
     {
+         //TODO: lasciare se funziona la selezione ID
+        if(m_first_time)
+        {
+            m_select_ID_timer.setSingleShot(true);
+            m_select_ID_timer.start(t_timeout_select_ID);
+        }//------------------------------------------
         if(i_e == EVENT::E_CHECK_LIST)
         {
             m_multicast->check_list();
             return;
-        }
 
-        if(i_e == EVENT::E_RECV_UPDATE)
+        } else if(i_e == EVENT::E_RECV_UPDATE)
         {
             m_multicast->update_user(i_data);
             return;
-        }
 
-        if(i_e == EVENT::E_SEND_UPDATE)
+        } else if(i_e == EVENT::E_SEND_UPDATE)
         {
             m_multicast->send_user_id();
             return;
-        }
-        if(i_e == EVENT::E_DISCONNECT)
+
+        } else if(i_e == EVENT::E_DISCONNECT)
         {
             qDebug() << "disconnect";
             m_multicast->disconnect_from_group();
             m_current_state = State::state_nogroup;
             m_ingroup = false;
+
+            //TODO: lasciare se funziona la selezione ID
+            m_first_time = false;
+            //------------------------------------------
+
             return;
         }
     }
 
     switch (m_current_state)
     {
-
         case state_nogroup:
             if(i_e == EVENT::E_CONNECT)
             {
@@ -81,8 +90,8 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 m_multicast->send_RTS();
 
                 //state_rts entry Point
-                rts_timer.setSingleShot(true);
-                rts_timer.start(t_timeout);
+                m_rts_timer.setSingleShot(true);
+                m_rts_timer.start(t_timeout);
 
                 break;
 
@@ -98,8 +107,8 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 m_current_state = State::state_cts;
 
                 // state_cts entry Point
-                cts_timer.setSingleShot(true);
-                cts_timer.start(t_timeout);
+                m_cts_timer.setSingleShot(true);
+                m_cts_timer.start(t_timeout);
 
                 m_multicast->answer_RTS(true, i_data);
 
@@ -111,7 +120,6 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
         case state_cts:
             //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_cts";
 
-            //JUST FOR SIMULATION PURPOSE
             if(i_e == EVENT::E_REQUEST_SEND)
             {
                 //PTT button pressed
@@ -119,14 +127,12 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 m_multicast->send_RTS();
 
                 //state_rts entry Point
-                rts_timer.setSingleShot(true);
-                rts_timer.start(t_timeout);
+                m_rts_timer.setSingleShot(true);
+                m_rts_timer.start(t_timeout);
 
                 break;
 
             }
-            //END JUST FOR SIMULATION PURPOSE
-
 
             if(i_e == EVENT::E_RECV_REQUEST)
             {
@@ -162,12 +168,16 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
 
             } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
             {
-                //Audio data packet received
-                //TODO: m_multicast->reproduce_audio(i_data);
+                // Disable timer to check if no data are received
+                m_check_rcvd_audio_data_timer.stop();
 
                 //someone is already transmitting
                 m_current_state = State::state_idle;
-                rts_timer.stop();
+                m_rts_timer.stop();
+
+                //Audio data packet received
+                m_multicast->reproduce_audio(i_data);
+
                 break;
             }
         break;
@@ -199,7 +209,6 @@ bool MulticastCtrl::get_is_sending()
     return m_is_sending;
 }
 
-
 void MulticastCtrl::rts_timeout()
 {
     qDebug() << QString::number(m_multicast->get_id()) <<   " rts_timeout";
@@ -210,10 +219,12 @@ void MulticastCtrl::rts_timeout()
         //qDebug() << "permission_confirmed";
         m_current_state = State::state_sending;
         m_is_sending = true;
+
     } else
     {
-        //qDebug() << "permission_denied";
-        m_current_state = State::state_idle;
+        //qDebug() << "permission_denied";   
+        m_check_rcvd_audio_data_timer.setSingleShot(true);
+        m_check_rcvd_audio_data_timer.start(t_timeout_received_audio_data);
     }
 
     m_multicast->clear_request_list();
@@ -227,3 +238,19 @@ void MulticastCtrl::cts_timeout()
     m_multicast->clear_request_list();
 }
 
+void MulticastCtrl::select_ID_timeout()
+{
+    //TODO: lasciare se funziona la selezione ID
+    m_multicast->set_user_ID();
+    m_first_time = false;
+    //------------------------------------------
+}
+
+void MulticastCtrl::received_audio_data_timeout()
+{
+    m_multicast->send_RTS();
+
+    //state_rts entry Point
+    m_rts_timer.setSingleShot(true);
+    m_rts_timer.start(t_timeout);
+}

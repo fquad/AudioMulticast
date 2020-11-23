@@ -37,6 +37,8 @@ public:
     void send_RTS();
     void send_user_id();
 
+    quint8 set_user_ID();
+
     void answer_RTS(bool answer, QByteArray requesterId);
     void add_RTS(QByteArray data);
 

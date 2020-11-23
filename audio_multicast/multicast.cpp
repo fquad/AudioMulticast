@@ -3,7 +3,7 @@
 #include "user.h"
 
 Multicast::Multicast(User* i_user):
-    m_user(i_user), m_id(m_user->get_id()),
+    m_user(i_user), m_id(m_user->get_ID()),
     m_timer_count(0)
 {
     connect(&m_socket, SIGNAL(new_packet_ready(QByteArray&)),
@@ -258,4 +258,24 @@ void Multicast::connect_to_group()
 void Multicast::disconnect_from_group()
 {
     m_socket.close();
+}
+
+quint8 Multicast::set_user_ID()
+{
+    qint8 ID = -1;
+    bool free = true;
+
+    while(true)
+    {
+        ++ID;
+        free = true;
+        for (quint8 occupied_ID : m_connected_user->keys())
+        {
+            free &= occupied_ID != ID;
+            if (!free) break;
+        }
+        if(free) break;
+    }
+
+    m_user->set_ID(ID);
 }

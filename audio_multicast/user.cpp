@@ -4,8 +4,7 @@
 #include<QTimer>
 
 
-User::User(int i_id):
-    m_id(i_id),
+User::User():
     m_count_call_tout(0),
     m_timer(new QTimer(this))
 {
@@ -54,7 +53,7 @@ void User::timeout_send_name()
     } else
     {
         //send every 1 second the user id for updating the list
-        QByteArray t_name = QByteArray::number(m_id);
+        QByteArray t_name = QByteArray::number(m_ID);
         m_FSM->process(EVENT::E_SEND_UPDATE, t_name);
     }
 }
@@ -77,14 +76,14 @@ bool User::get_is_sending()
 void User::receive(QByteArray& i_msg)
 {
     int t_type = i_msg.at(0);
-    int sender_id = i_msg.at(1);
+    int sender_ID = i_msg.at(1);
 
 
     QByteArray t_msg = i_msg.mid(1,-1);
 
-    if(sender_id != m_id)
+    if(sender_ID != m_ID)
     {
-        qDebug() << m_id
+        qDebug() << m_ID
                  << "received type: "
                  << i_msg.mid(0,1)
                  << " msg: "

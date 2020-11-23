@@ -10,7 +10,9 @@
 
 
 const int t_timeout = 500;
-const int user_update_timeout = 1000;
+const int timeout_user_update = 1000;
+const int t_timeout_select_ID = 1100;
+const int t_timeout_received_audio_data = 50;
 
 enum EVENT
 {
@@ -59,12 +61,18 @@ private:
 
     State m_current_state;
 
-    QTimer cts_timer;
-    QTimer rts_timer;
+    QTimer m_cts_timer;
+    QTimer m_rts_timer;
+    QTimer m_check_rcvd_audio_data_timer;
+
+    QTimer m_select_ID_timer;
+    bool m_first_time;
 
 private slots:
     void rts_timeout();
     void cts_timeout();
+    void select_ID_timeout();
+    void received_audio_data_timeout();
 };
 
 #endif // PRIORITY_CTRL_H
