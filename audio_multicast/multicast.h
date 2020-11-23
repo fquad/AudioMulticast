@@ -6,6 +6,7 @@
 #include <QByteArray>
 
 #include "udpinterface.h"
+#include "audiointerface.h"
 
 class User;
 
@@ -30,26 +31,31 @@ public:
 
     void reproduce_audio(QByteArray data);
 
-    void send_audio();
+    void start_send_audio();
+    void stop_send_audio();
+
     void send_RTS();
+    void send_user_id();
+
     void answer_RTS(bool answer, QByteArray requesterId);
+    void add_RTS(QByteArray data);
+
+    void add_answer_to_list(QByteArray data);
+    void clear_answer_list();
+    void clear_request_list();
 
     bool evaluate_list();
     void check_list();
     void update_user(QByteArray& i_user_name);
-    void send_user_id();
-
-    void add_RTS(QByteArray data);
-    void add_answer_to_list(QByteArray data);
-
-    void clear_request_list();
-    void clear_answer_list();
 
     inline int  get_id() { return m_id; };
     inline void set_user_list(QMap<quint8, int>* i_user_list_ptr)
     { m_connected_user = i_user_list_ptr; }
 
 private:
+    void send(MSG_TYPE i_type, QByteArray data);
+
+
     User* m_user;
     quint8 m_id;
     int m_timer_count;
@@ -60,11 +66,14 @@ private:
     QList<quint8> m_request_list;
     QList<int>    m_answer_list;
 
-    void send(MSG_TYPE i_type, QByteArray data);
-
     //-----------------------------------------------------Socket
-
     UDPInterface m_socket;
+
+    //-----------------------------------------------------Audio
+    AudioInterface m_audio_interface;
+
+private slots:
+    void data_audio_ready(QByteArray&);
 
 };
 

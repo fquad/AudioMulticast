@@ -9,7 +9,7 @@
 #include "multicast.h"
 
 
-const int t_timeout = 200;
+const int t_timeout = 500;
 const int user_update_timeout = 1000;
 
 enum EVENT

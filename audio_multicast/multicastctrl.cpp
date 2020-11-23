@@ -16,7 +16,6 @@ MulticastCtrl::MulticastCtrl(User* i_user) :
 
 MulticastCtrl::~MulticastCtrl()
 {
-    delete m_multicast;
     qDebug() << "FSM deleted";
 }
 
@@ -90,7 +89,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
             {
                 //Audio data packet received
-                m_multicast->reproduce_audio(i_data);
+                //m_multicast->reproduce_audio(i_data);
                 break;
 
             } else if(i_e == EVENT::E_RECV_REQUEST)
@@ -164,7 +163,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
             {
                 //Audio data packet received
-                m_multicast->reproduce_audio(i_data);
+                //TODO: m_multicast->reproduce_audio(i_data);
 
                 //someone is already transmitting
                 m_current_state = State::state_idle;
@@ -182,14 +181,15 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 //PTT button released
                 m_current_state = State::state_idle;
                 m_is_sending = false;
+                m_multicast->stop_send_audio();
                 break;
 
-            } else if(i_e == EVENT::E_SEND_AUDIO_DATA)
-            {
+            } //else if(i_e == EVENT::E_SEND_AUDIO_DATA)
+            //{
                 //audio data available to be sent
-                m_multicast->send_audio();
-                break;
-            }
+               // m_multicast->start_send_audio();
+            //    break;
+            //}
         break;
     }
 }

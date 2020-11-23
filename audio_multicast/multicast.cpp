@@ -8,39 +8,46 @@ Multicast::Multicast(User* i_user):
 {
     connect(&m_socket, SIGNAL(new_packet_ready(QByteArray&)),
             m_user, SLOT(receive(QByteArray&)));
+
+    connect(&m_audio_interface, SIGNAL(data_ready(QByteArray&)),
+            this, SLOT(data_audio_ready(QByteArray&)));
+}
+
+void Multicast::data_audio_ready(QByteArray& i_data_audio)
+{
+    QByteArray audio_data;
+    audio_data.append(m_id);
+    audio_data.append(i_data_audio);
+
+    qDebug() << i_data_audio;
+    send(MSG_TYPE::AUDIO, audio_data);
 }
 
 void Multicast::reproduce_audio(QByteArray i_audio_data)
 {
     //play the received audio on the speakers
 
-    //test version with text messages
     quint8 id = i_audio_data.at(0);
-    QString str = QString::number(m_id)
-            + " : received from"
-            +  QString::number(id)
-            + " > "
-            + i_audio_data.mid(1,-1);
+    QByteArray audio_data = i_audio_data.mid(1,-1);
 
-    qDebug() << "received audio : " << i_audio_data;
+//    qDebug() << QString::number(m_id)
+//            + " : received from"
+//            +  QString::number(id)
+//            + " > "
+//            + audio_data;
+
+    m_audio_interface.audio_reproduce_audio(i_audio_data);
 }
 
-void Multicast::send_audio()
+void Multicast::start_send_audio()
 {
     //capture audio from the microphone and send it
+    m_audio_interface.audio_input_start();
+}
 
-    //test version with text messages
-    QByteArray audio_data;
-    audio_data.append(m_id);
-
-    //m_audio_interface.start_input();
-    // --------------------------------------------------
-
-
-    //send(MSG_TYPE::AUDIO, audio_data);
-
-
-    //qDebug() << "received audio : " << audioData;
+void Multicast::stop_send_audio()
+{
+    m_audio_interface.audio_input_stop();
 }
 
 void Multicast::send_RTS()
@@ -118,7 +125,6 @@ void Multicast::answer_RTS(bool i_answer, QByteArray i_requester_id)
 
     if(r_id > 0 && r_id < 255)
     {
-
         qDebug() << QString::number(m_id)
                  << " answered : "
                  << QString::number(i_answer)
@@ -147,6 +153,12 @@ bool Multicast::evaluate_list()
     int n_answer =  m_answer_list.size();
     int n_permission = 0;
 
+    if (n_user == 1)
+    {
+        start_send_audio();
+        return true;
+    }
+
     for(int i = 0; i < n_answer; i++)
     {
         if(m_answer_list.at(i) == 1)
@@ -161,19 +173,19 @@ bool Multicast::evaluate_list()
     qDebug() << "   n permission: " + QString::number(n_permission);
     qDebug() << "   n user      : " + QString::number(n_user);
 
-    if((n_user - 1) < 1)
-    {
-        //No one in the group
-        qDebug() << "permission denied";
-        qDebug() << "---------------";
-        return false;
-    }
+//    if((n_user - 1) < 1)
+//    {
+//        //No one in the group
+//        qDebug() << "permission denied";
+//        qDebug() << "---------------";
+//        return false;
+//    }
 
     if( 1 / n_sender  <= n_permission / (n_user - 1) )
     {
         qDebug() << "permission granted";
         qDebug() << "---------------";
-        send_audio();
+        start_send_audio();
         return true;
     }
 
