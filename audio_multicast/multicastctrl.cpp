@@ -8,12 +8,18 @@ MulticastCtrl::MulticastCtrl(User* i_user) :
   m_ingroup(false),
   m_is_sending(false),
   m_current_state(state_nogroup),
-  m_first_time(true)
+  m_first_time(true),
+  m_retry_attemp(0)
 {
     //connect the timers to their callback
     connect(&m_rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
     connect(&m_cts_timer, SIGNAL(timeout()), this, SLOT(cts_timeout()));
-    connect(&m_select_ID_timer, SIGNAL(timeout()), this, SLOT(select_ID_timeout()));
+
+    connect(&m_select_ID_timer, SIGNAL(timeout()),
+            this, SLOT(select_ID_timeout()));
+
+    connect(&m_check_rcvd_audio_data_timer, SIGNAL(timeout()),
+            this, SLOT(received_audio_data_timeout()));
 }
 
 MulticastCtrl::~MulticastCtrl()
@@ -222,6 +228,21 @@ void MulticastCtrl::rts_timeout()
 
     } else
     {
+
+        if(m_retry_attemp < max_retry_attemp){
+            m_retry_attemp++;
+             qDebug() <<"retry to send";
+        }else{
+            // max number of attemp reached
+            m_retry_attemp = 0;
+            m_multicast->clear_request_list();
+            m_multicast->clear_answer_list();
+            m_current_state = State::state_idle;
+            m_rts_timer.stop();
+            return;
+        }
+
+
         //qDebug() << "permission_denied";   
         m_check_rcvd_audio_data_timer.setSingleShot(true);
         m_check_rcvd_audio_data_timer.start(t_timeout_received_audio_data);
@@ -249,6 +270,8 @@ void MulticastCtrl::select_ID_timeout()
 void MulticastCtrl::received_audio_data_timeout()
 {
     m_multicast->send_RTS();
+
+    //TODO: wait random t time
 
     //state_rts entry Point
     m_rts_timer.setSingleShot(true);

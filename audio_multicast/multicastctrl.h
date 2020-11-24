@@ -8,11 +8,13 @@
 
 #include "multicast.h"
 
+const int max_retry_attemp = 3;
 
 const int t_timeout = 500;
+const int t_timeout_received_audio_data = 50;
+
 const int timeout_user_update = 1000;
 const int t_timeout_select_ID = 1100;
-const int t_timeout_received_audio_data = 50;
 
 enum EVENT
 {
@@ -58,6 +60,8 @@ private:
 
     bool m_ingroup;
     bool m_is_sending;
+
+    int m_retry_attemp;
 
     State m_current_state;
 

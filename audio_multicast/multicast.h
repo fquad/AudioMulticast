@@ -66,7 +66,7 @@ private:
     QMap<quint8, int>  m_connected_user_prev;
 
     QList<quint8> m_request_list;
-    QList<int>    m_answer_list;
+    QMap<quint8,int> m_answer_list;
 
     //-----------------------------------------------------Socket
     UDPInterface m_socket;

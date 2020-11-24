@@ -19,7 +19,7 @@ void Multicast::data_audio_ready(QByteArray& i_data_audio)
     audio_data.append(m_id);
     audio_data.append(i_data_audio);
 
-    qDebug() << i_data_audio;
+    //qDebug() << i_data_audio;
     send(MSG_TYPE::AUDIO, audio_data);
 }
 
@@ -153,46 +153,41 @@ bool Multicast::evaluate_list()
     int n_answer =  m_answer_list.size();
     int n_permission = 0;
 
-    if (n_user == 1)
-    {
-        start_send_audio();
-        return true;
-    }
 
-    for(int i = 0; i < n_answer; i++)
-    {
-        if(m_answer_list.at(i) == 1)
-        {
-            n_permission++;
-        }
-    }
     qDebug() << m_id << " is evaluating his list";
     qDebug() << "---------------";
-    qDebug() << "   n sender    : " + QString::number(n_sender);
-    qDebug() << "   n answer    : " + QString::number(n_answer);
-    qDebug() << "   n permission: " + QString::number(n_permission);
-    qDebug() << "   n user      : " + QString::number(n_user);
+    //qDebug() << "   n sender    : " + QString::number(n_sender);
+    //qDebug() << "   n answer    : " + QString::number(n_answer);
+    //qDebug() << "   n user      : " + QString::number(n_user);
 
-//    if((n_user - 1) < 1)
-//    {
-//        //No one in the group
-//        qDebug() << "permission denied";
-//        qDebug() << "---------------";
-//        return false;
-//    }
+    if((n_user - 1) < 1){
+        //No one in the group
+        qDebug() << "permission denied";
+        qDebug() << "---------------";
+        return false;
+    }
 
-    if( 1 / n_sender  <= n_permission / (n_user - 1) )
+    int max_value = 0;
+    quint8 max_id = 0;
+    for(auto e : m_answer_list.keys())
     {
+        if(m_answer_list.value(e) > max_value){
+            max_value = m_answer_list.value(e);
+            max_id = e;
+        }
+
+    }
+
+    if( max_id == m_id){
         qDebug() << "permission granted";
         qDebug() << "---------------";
         start_send_audio();
         return true;
+    }else{
+        qDebug() << "permission denied";
+        qDebug() << "---------------";
+        return false;
     }
-
-    qDebug() << "permission denied";
-    qDebug() << "---------------";
-
-    return false;
 }
 
 void Multicast::add_RTS(QByteArray i_data)
@@ -214,15 +209,16 @@ void Multicast::add_answer_to_list(QByteArray i_data)
     quint8 id = i_data.at(1);
     int answer = i_data.at(2);
 
-    // check that the asnwer is to the user request
-    if(id == m_id)
-    {
-        m_answer_list.append(answer);
-
-        qDebug() << m_id
-                 << " added answer to list with value: "
-                 << answer;
+    int n_answer;
+    if(m_answer_list.count(0)){
+        m_answer_list.insert(id,answer);
+    }else{
+        n_answer = m_answer_list.value(id) + answer;
+        m_answer_list.insert(id,n_answer);
     }
+    qDebug() << m_id
+             << " has answer value: "
+             << answer;
 }
 
 void Multicast::clear_request_list()

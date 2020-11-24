@@ -76,10 +76,10 @@ void AudioInterface::data_ready_to_read()
 
     //Check the number of samples in input buffer
     qint64 sample_buffer_size = m_audio_input->bytesReady();
-
+    qDebug() <<  " sample ready: " << sample_buffer_size;
     //Limit sample size
-    if(sample_buffer_size > 512) //4096
-        sample_buffer_size = 512  ;
+    if(sample_buffer_size > 4096) //4096
+        sample_buffer_size = 4096  ;
 
     char* temp_data = new char[sample_buffer_size];
     //Read sound samples from input device to buffer
