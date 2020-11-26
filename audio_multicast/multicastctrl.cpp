@@ -35,7 +35,6 @@ void MulticastCtrl::set_user_list(QMap<quint8, int>* i_user_list_ptr)
 void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
 {
 
-
     if(m_ingroup == true)
     {
         if(i_e == EVENT::E_RECV_UPDATE)

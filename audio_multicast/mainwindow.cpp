@@ -62,6 +62,8 @@ void MainWindow::on_gui_join_clicked()
 
             ui->gui_IP->setEnabled(true);
             ui->gui_port->setEnabled(true);
+
+            ui->gui_connected_user->clear();
         }
     }
 

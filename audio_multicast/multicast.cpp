@@ -109,7 +109,7 @@ void Multicast::check_list()
 
 void Multicast::send_user_id()
 {
-    //qDebug() << QString::number(m_id) << " sent is id";
+    qDebug() << QString::number(m_id) << " sent is id";
     QByteArray msg;
     msg.append(m_id);
     send(MSG_TYPE::UPDATE_NAME, msg);
@@ -254,6 +254,8 @@ void Multicast::connect_to_group()
 void Multicast::disconnect_from_group()
 {
     m_socket.close();
+    m_connected_user->clear();
+    m_connected_user_prev.clear();
 }
 
 void Multicast::set_user_ID()
@@ -261,8 +263,8 @@ void Multicast::set_user_ID()
     quint8 ID = 0;
     bool free = true;
 
-    while(true)
-    {
+    while(true && ID < 200)
+    {    
         free = true;
         for (quint8 occupied_ID : m_connected_user->keys())
         {
@@ -270,9 +272,14 @@ void Multicast::set_user_ID()
             if (!free) break;
         }
         if(free) break;
+
         ++ID;
     }
 
+    qDebug() << "selected ID: " << ID;
+    m_id = ID; //TODO: togliere m_id e sostituire con m_user->get_ID()
     m_user->set_ID(ID);
-    m_id = ID;
+    send_user_id();
 }
+
+
