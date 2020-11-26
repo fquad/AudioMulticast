@@ -55,6 +55,7 @@ void MainWindow::on_gui_join_clicked()
     {
         if (m_user->quit_group())
         {
+            ui->gui_connected_user->clear();
             //the quit button becomes join button
             ui->gui_join->setText("join");
             ui->gui_PTT->setEnabled(false);

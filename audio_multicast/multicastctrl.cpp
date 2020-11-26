@@ -34,27 +34,26 @@ void MulticastCtrl::set_user_list(QMap<quint8, int>* i_user_list_ptr)
 
 void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
 {
+
+
     if(m_ingroup == true)
     {
-         //TODO: lasciare se funziona la selezione ID
-        if(m_first_time)
+        if(i_e == EVENT::E_RECV_UPDATE)
         {
-            m_select_ID_timer.setSingleShot(true);
-            m_select_ID_timer.start(t_timeout_select_ID);
-        }//------------------------------------------
+            m_multicast->update_user(i_data);
+            //qDebug() << "received update";
+            return;
+        }
         if(i_e == EVENT::E_CHECK_LIST)
         {
             m_multicast->check_list();
             return;
 
-        } else if(i_e == EVENT::E_RECV_UPDATE)
-        {
-            m_multicast->update_user(i_data);
-            return;
-
         } else if(i_e == EVENT::E_SEND_UPDATE)
         {
-            m_multicast->send_user_id();
+            if(m_first_time == false){
+                m_multicast->send_user_id();
+            }
             return;
 
         } else if(i_e == EVENT::E_DISCONNECT)
@@ -65,148 +64,162 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             m_ingroup = false;
 
             //TODO: lasciare se funziona la selezione ID
-            m_first_time = false;
+            m_first_time = true;
             //------------------------------------------
 
             return;
         }
     }
 
-    switch (m_current_state)
+    //TODO: lasciare se funziona la selezione ID
+    if(m_first_time && i_e == EVENT::E_CONNECT && m_current_state == state_nogroup)
     {
-        case state_nogroup:
-            if(i_e == EVENT::E_CONNECT)
-            {
-                // user connect to the group
-                qDebug() << "connected";
-                m_multicast->connect_to_group();
-                m_current_state = State::state_idle;
-                m_ingroup = true;
-            }
-        break;
+        qDebug() << "connected";
+        m_multicast->connect_to_group();
+        m_select_ID_timer.setSingleShot(true);
+        m_select_ID_timer.start(t_timeout_select_ID);
+        m_current_state = State::state_idle;
+        m_ingroup = true;
+    }else{
 
-        case state_idle:
-            //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_idle";
-            //TODO chage E_REQUEST_SEND in E_SEND_REQUEST
 
-            if(i_e == EVENT::E_REQUEST_SEND)
-            {
-                //PTT button pressed
-                m_current_state = State::state_rts;
-                m_multicast->send_RTS();
+        switch (m_current_state)
+        {
+        /*
+            case state_nogroup:
+                if(i_e == EVENT::E_CONNECT)
+                {
+                    // user connect to the group
+                    qDebug() << "connected";
+                    m_multicast->connect_to_group();
+                    m_current_state = State::state_idle;
+                    m_ingroup = true;
+                }
+            break;
+        */
+            case state_idle:
+                //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_idle";
+                //TODO chage E_REQUEST_SEND in E_SEND_REQUEST
 
-                //state_rts entry Point
-                m_rts_timer.setSingleShot(true);
-                m_rts_timer.start(t_timeout);
+                if(i_e == EVENT::E_REQUEST_SEND)
+                {
+                    //PTT button pressed
+                    m_current_state = State::state_rts;
+                    m_multicast->send_RTS();
 
-                break;
+                    //state_rts entry Point
+                    m_rts_timer.setSingleShot(true);
+                    m_rts_timer.start(t_timeout);
 
-            } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
-            {
-                //Audio data packet received
-                //m_multicast->reproduce_audio(i_data);
-                break;
+                    break;
 
-            } else if(i_e == EVENT::E_RECV_REQUEST)
-            {
-                //Received a request to send from another user
-                m_current_state = State::state_cts;
+                } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
+                {
+                    //Audio data packet received
+                    //m_multicast->reproduce_audio(i_data);
+                    break;
 
-                // state_cts entry Point
-                m_cts_timer.setSingleShot(true);
-                m_cts_timer.start(t_timeout);
+                } else if(i_e == EVENT::E_RECV_REQUEST)
+                {
+                    //Received a request to send from another user
+                    m_current_state = State::state_cts;
 
-                m_multicast->answer_RTS(true, i_data);
+                    // state_cts entry Point
+                    m_cts_timer.setSingleShot(true);
+                    m_cts_timer.start(t_timeout);
 
-                break;
+                    m_multicast->answer_RTS(true, i_data);
 
-            }
-        break;
+                    break;
 
-        case state_cts:
-            //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_cts";
+                }
+            break;
 
-            if(i_e == EVENT::E_REQUEST_SEND)
-            {
-                //PTT button pressed
-                m_current_state = State::state_rts;
-                m_multicast->send_RTS();
+            case state_cts:
+                //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_cts";
 
-                //state_rts entry Point
-                m_rts_timer.setSingleShot(true);
-                m_rts_timer.start(t_timeout);
+                if(i_e == EVENT::E_REQUEST_SEND)
+                {
+                    //PTT button pressed
+                    m_current_state = State::state_rts;
+                    m_multicast->send_RTS();
 
-                break;
+                    //state_rts entry Point
+                    m_rts_timer.setSingleShot(true);
+                    m_rts_timer.start(t_timeout);
 
-            }
+                    break;
 
-            if(i_e == EVENT::E_RECV_REQUEST)
-            {
-                //Received a request of sending from another user
-                m_multicast->answer_RTS(false, i_data);
-                break;
+                }
 
-            } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
-            {
-                //Audio data packet received
-                m_multicast->reproduce_audio(i_data);
-                break;
+                if(i_e == EVENT::E_RECV_REQUEST)
+                {
+                    //Received a request of sending from another user
+                    m_multicast->answer_RTS(false, i_data);
+                    break;
 
-            }
-        break;
+                } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
+                {
+                    //Audio data packet received
+                    m_multicast->reproduce_audio(i_data);
+                    break;
 
-        case state_rts:
+                }
+            break;
 
-            //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_rts";
+            case state_rts:
 
-            if(i_e == EVENT::E_RECV_REQUEST)
-            {
-                //Received a request to send from another user
-                m_multicast->answer_RTS(false, i_data);
-                m_multicast->add_RTS(i_data);
-                break;
+                //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_rts";
 
-            } else if(i_e == EVENT::E_ANSWER_TO_RTS)
-            {
-                //received an answer to a request to send
-                m_multicast->add_answer_to_list(i_data);
-                break;
+                if(i_e == EVENT::E_RECV_REQUEST)
+                {
+                    //Received a request to send from another user
+                    m_multicast->answer_RTS(false, i_data);
+                    m_multicast->add_RTS(i_data);
+                    break;
 
-            } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
-            {
-                // Disable timer to check if no data are received
-                m_check_rcvd_audio_data_timer.stop();
+                } else if(i_e == EVENT::E_ANSWER_TO_RTS)
+                {
+                    //received an answer to a request to send
+                    m_multicast->add_answer_to_list(i_data);
+                    break;
 
-                //someone is already transmitting
-                m_current_state = State::state_idle;
-                m_rts_timer.stop();
+                } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
+                {
+                    // Disable timer to check if no data are received
+                    m_check_rcvd_audio_data_timer.stop();
 
-                //Audio data packet received
-                m_multicast->reproduce_audio(i_data);
+                    //someone is already transmitting
+                    m_current_state = State::state_idle;
+                    m_rts_timer.stop();
 
-                break;
-            }
-        break;
+                    //Audio data packet received
+                    m_multicast->reproduce_audio(i_data);
 
-        case state_sending:
+                    break;
+                }
+            break;
 
-            //qDebug() << QString::number(m_multicast->getId()) <<  " FSM state: state_sending";
+            case state_sending:
 
-            if(i_e == EVENT::E_STOP_SEND)
-            {
-                //PTT button released
-                m_current_state = State::state_idle;
-                m_is_sending = false;
-                m_multicast->stop_send_audio();
-                break;
+                //qDebug() << QString::number(m_multicast->getId()) <<  " FSM state: state_sending";
 
-            } //else if(i_e == EVENT::E_SEND_AUDIO_DATA)
-            //{
-                //audio data available to be sent
-               // m_multicast->start_send_audio();
-            //    break;
-            //}
-        break;
+                if(i_e == EVENT::E_STOP_SEND)
+                {
+                    //PTT button released
+                    m_current_state = State::state_idle;
+                    m_is_sending = false;
+                    m_multicast->stop_send_audio();
+                    break;
+
+                } //else if(i_e == EVENT::E_SEND_AUDIO_DATA)
+                //{
+                    //audio data available to be sent
+                   // m_multicast->start_send_audio();
+                //    break;
+                //}
+            break;
+        }
     }
 }
 

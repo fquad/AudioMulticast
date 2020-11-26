@@ -28,7 +28,7 @@ void UDPInterface::send(QByteArray packet, int packetSize)
 
 void UDPInterface::start()
 {
-    udpSocket4.bind(QHostAddress::AnyIPv4, port, QUdpSocket::ShareAddress | QUdpSocket::ShareAddress );
+    udpSocket4.bind(QHostAddress::AnyIPv4, port, QUdpSocket::ShareAddress );
     udpSocket4.joinMulticastGroup(groupAddress4);
     connect(&udpSocket4, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 }

@@ -256,14 +256,13 @@ void Multicast::disconnect_from_group()
     m_socket.close();
 }
 
-quint8 Multicast::set_user_ID()
+void Multicast::set_user_ID()
 {
-    qint8 ID = -1;
+    quint8 ID = 0;
     bool free = true;
 
     while(true)
     {
-        ++ID;
         free = true;
         for (quint8 occupied_ID : m_connected_user->keys())
         {
@@ -271,7 +270,9 @@ quint8 Multicast::set_user_ID()
             if (!free) break;
         }
         if(free) break;
+        ++ID;
     }
 
     m_user->set_ID(ID);
+    m_id = ID;
 }
