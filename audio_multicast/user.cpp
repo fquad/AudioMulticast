@@ -6,7 +6,7 @@
 
 User::User():
     m_count_call_tout(0),
-    m_timer(new QTimer(this))
+    m_timer(new QTimer(this)), m_ID(201)
 {
     m_FSM = new MulticastCtrl(this);
     m_FSM->set_user_list(&m_connected_user);

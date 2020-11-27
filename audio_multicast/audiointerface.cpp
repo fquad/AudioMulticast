@@ -76,7 +76,7 @@ void AudioInterface::data_ready_to_read()
 
     //Check the number of samples in input buffer
     qint64 sample_buffer_size = m_audio_input->bytesReady();
-    qDebug() <<  " sample ready: " << sample_buffer_size;
+
     //Limit sample size
     if(sample_buffer_size > 4096) //4096
         sample_buffer_size = 4096  ;
@@ -89,6 +89,7 @@ void AudioInterface::data_ready_to_read()
 
     if(read_sample_buffer_size > 0)
     {
+        qDebug() <<  " sample ready: " << sample_buffer_size;
         QByteArray data = QByteArray(temp_data);
 
         //this signal will be cathced in the Mulicast class by the slot Multicast::data_audio_ready(QByteArray& i_data_audio)

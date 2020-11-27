@@ -21,6 +21,7 @@ void Multicast::data_audio_ready(QByteArray& i_data_audio)
 
     //qDebug() << i_data_audio;
     send(MSG_TYPE::AUDIO, audio_data);
+    //reproduce_audio(audio_data);
 }
 
 void Multicast::reproduce_audio(QByteArray i_audio_data)
@@ -75,13 +76,13 @@ void Multicast::update_user(QByteArray& i_user_name)
         (*m_connected_user)[id] = 1;
         m_connected_user_prev[id] = 0;
 
-        emit m_user->update_gui_list();
-
     } else
     {
         //user is already in the users list
         m_connected_user_prev[id]++;
     }
+
+
 }
 
 void Multicast::check_list()
@@ -105,6 +106,8 @@ void Multicast::check_list()
     //qDebug() << "----------------------------------------\n\n";
 
     m_connected_user_prev = *m_connected_user;
+
+    emit m_user->update_gui_list();
 }
 
 void Multicast::send_user_id()
@@ -152,7 +155,6 @@ bool Multicast::evaluate_list()
     int n_user = m_connected_user->size() + 1;
     int n_answer =  m_answer_list.size();
     int n_permission = 0;
-
 
     qDebug() << m_id << " is evaluating his list";
     qDebug() << "---------------";
@@ -256,6 +258,8 @@ void Multicast::disconnect_from_group()
     m_socket.close();
     m_connected_user->clear();
     m_connected_user_prev.clear();
+    m_id = 201;
+    m_user->set_ID(m_id);
 }
 
 void Multicast::set_user_ID()

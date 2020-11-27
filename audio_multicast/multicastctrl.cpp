@@ -115,7 +115,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
                 {
                     //Audio data packet received
-                    //m_multicast->reproduce_audio(i_data);
+                    m_multicast->reproduce_audio(i_data);
                     break;
 
                 } else if(i_e == EVENT::E_RECV_REQUEST)
