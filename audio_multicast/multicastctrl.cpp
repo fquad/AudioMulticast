@@ -115,6 +115,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
                 {
                     //Audio data packet received
+
                     m_multicast->reproduce_audio(i_data);
                     break;
 
@@ -237,14 +238,18 @@ void MulticastCtrl::rts_timeout()
         //qDebug() << "permission_confirmed";
         m_current_state = State::state_sending;
         m_is_sending = true;
+        m_multicast->start_send_audio();
 
     } else
     {
 
-        if(m_retry_attemp < max_retry_attemp){
+        if(m_retry_attemp < max_retry_attemp)
+        {
             m_retry_attemp++;
-             qDebug() <<"retry to send";
-        }else{
+            qDebug() <<"retry to send";
+
+        } else
+        {
             // max number of attemp reached
             m_retry_attemp = 0;
             m_multicast->clear_request_list();

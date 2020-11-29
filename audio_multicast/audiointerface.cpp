@@ -14,21 +14,21 @@ AudioInterface::AudioInterface():
 
 AudioInterface::~AudioInterface()
 {
-    delete m_audio_input;
-    delete m_audio_output;
-
     m_audio_output->stop();
     m_output = nullptr;
+
+    delete m_audio_input;
+    delete m_audio_output;
 }
 
 void AudioInterface::audio_init()
 {
-    m_format.setSampleRate(8000); //set frequency to 8000
-    m_format.setChannelCount(1); //set channels to mono
-    m_format.setSampleSize(16); //set sample size to 16 bit
-    m_format.setSampleType(QAudioFormat::UnSignedInt); //Sample type as usigned integer sample
-    m_format.setByteOrder(QAudioFormat::LittleEndian); //Byte order
-    m_format.setCodec("audio/pcm"); //set codec as simple audio/pcm
+    m_format.setSampleRate(8000);                       //set frequency to 8000
+    m_format.setChannelCount(1);                        //set channels to mono
+    m_format.setSampleSize(16);//m_format.setSampleSize(16);                         //set sample size to 16 bit
+    m_format.setSampleType(QAudioFormat::UnSignedInt);//m_format.setSampleType(QAudioFormat::UnSignedInt);  //Sample type as usigned integer sample
+    m_format.setByteOrder(QAudioFormat::LittleEndian);  //Byte order
+    m_format.setCodec("audio/pcm");                     //set codec as simple audio/pcm
 
     QAudioDeviceInfo infoIn(QAudioDeviceInfo::defaultInputDevice());
     if (!infoIn.isFormatSupported(m_format))
@@ -79,7 +79,7 @@ void AudioInterface::data_ready_to_read()
 
     //Limit sample size
     if(sample_buffer_size > 4096) //4096
-        sample_buffer_size = 4096  ;
+        sample_buffer_size = 4096;
 
     char* temp_data = new char[sample_buffer_size];
     //Read sound samples from input device to buffer

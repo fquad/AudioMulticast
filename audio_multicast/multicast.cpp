@@ -19,7 +19,7 @@ void Multicast::data_audio_ready(QByteArray& i_data_audio)
     audio_data.append(m_id);
     audio_data.append(i_data_audio);
 
-    //qDebug() << i_data_audio;
+    qDebug() << i_data_audio;
     send(MSG_TYPE::AUDIO, audio_data);
     //reproduce_audio(audio_data);
 }
@@ -44,11 +44,15 @@ void Multicast::start_send_audio()
 {
     //capture audio from the microphone and send it
     m_audio_interface.audio_input_start();
+
+    emit m_user->send_update_gui_sending_indicator(true);
 }
 
 void Multicast::stop_send_audio()
 {
     m_audio_interface.audio_input_stop();
+
+    emit m_user->send_update_gui_sending_indicator(false);
 }
 
 void Multicast::send_RTS()
@@ -82,7 +86,6 @@ void Multicast::update_user(QByteArray& i_user_name)
         m_connected_user_prev[id]++;
     }
 
-
 }
 
 void Multicast::check_list()
@@ -98,7 +101,7 @@ void Multicast::check_list()
             m_connected_user->remove(key);
             m_connected_user_prev.remove(key);
 
-            emit m_user->update_gui_list();
+            emit m_user->send_update_gui_list();
         }
         //else qDebug() << key;
     }
@@ -107,7 +110,7 @@ void Multicast::check_list()
 
     m_connected_user_prev = *m_connected_user;
 
-    emit m_user->update_gui_list();
+    emit m_user->send_update_gui_list();
 }
 
 void Multicast::send_user_id()
@@ -164,9 +167,9 @@ bool Multicast::evaluate_list()
 
     if((n_user - 1) < 1){
         //No one in the group
-        qDebug() << "permission denied";
+        qDebug() << "permission garanted (alone in the group)";
         qDebug() << "---------------";
-        return false;
+        return true;
     }
 
     int max_value = 0;
@@ -259,7 +262,8 @@ void Multicast::disconnect_from_group()
     m_connected_user->clear();
     m_connected_user_prev.clear();
     m_id = 201;
-    m_user->set_ID(m_id);
+
+    emit m_user->send_update_gui_ID(-1);
 }
 
 void Multicast::set_user_ID()
@@ -283,6 +287,9 @@ void Multicast::set_user_ID()
     qDebug() << "selected ID: " << ID;
     m_id = ID; //TODO: togliere m_id e sostituire con m_user->get_ID()
     m_user->set_ID(ID);
+
+    emit m_user->send_update_gui_ID(ID);
+
     send_user_id();
 }
 

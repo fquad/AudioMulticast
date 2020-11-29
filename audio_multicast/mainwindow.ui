@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>690</width>
-    <height>450</height>
+    <height>519</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -48,7 +48,7 @@
        </layout>
       </item>
       <item>
-       <spacer name="horizzonatl_spacer_1">
+       <spacer name="horizontal_spacer_1">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -80,11 +80,35 @@
      </layout>
     </item>
     <item>
-     <widget class="QPushButton" name="gui_join">
-      <property name="text">
-       <string>join</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="gui_join">
+        <property name="text">
+         <string>join</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="gui_in_group_indicator">
+        <property name="text">
+         <string>     </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="Line" name="line_1">
@@ -104,16 +128,16 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontal_layout_1">
+     <layout class="QHBoxLayout" name="horizzontal_layout_1">
       <item>
        <layout class="QVBoxLayout" name="vertical_layout_1">
         <item>
-         <widget class="QLabel" name="label_internal_state">
+         <widget class="QLabel" name="label_ID">
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Internal state             </string>
+           <string>Actual ID      </string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -158,10 +182,44 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLineEdit" name="gui_internal_state"/>
+         <layout class="QHBoxLayout" name="horizontal_layout_4">
+          <item>
+           <spacer name="horizontal_spacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="gui_ID"/>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QListWidget" name="gui_connected_user"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QListWidget" name="gui_connected_user"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -175,11 +233,38 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="gui_PTT">
-      <property name="text">
-       <string>PTT</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="gui_PTT">
+        <property name="text">
+         <string>PTT</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="gui_sending_indicator">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>     </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontal_spacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

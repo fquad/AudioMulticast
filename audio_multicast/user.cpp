@@ -32,8 +32,10 @@ bool User::join_group(QHostAddress& i_IP, quint16 i_port)
 
 bool User::quit_group()
 {
-    disconnect(this, nullptr, nullptr, nullptr);
     m_FSM->process(EVENT::E_DISCONNECT);
+
+    //TODO: problema con questo disconnect
+    disconnect(this, nullptr, nullptr, nullptr);
 
     return true;
 }

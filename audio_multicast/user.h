@@ -5,8 +5,6 @@
 #include "multicastctrl.h"
 #include <QByteArray>
 
-class UDPSimulation;
-
 class User: public QObject
 {
     Q_OBJECT
@@ -47,7 +45,9 @@ private:
 signals:
     void send_to_slot(QByteArray& o_msg);
     void send_to_server(int, QByteArray& msg);
-    void update_gui_list(); // signal to update the GUI list
+    void send_update_gui_list(); // signal to update the GUI list
+    void send_update_gui_sending_indicator(bool);
+    void send_update_gui_ID(int a);
 
 public slots:
     void receive(QByteArray&);

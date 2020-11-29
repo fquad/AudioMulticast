@@ -21,7 +21,9 @@ private slots:
     void on_gui_PTT_released();
     void on_gui_PTT_pressed();
 
-    void update_gui_list();
+    void recv_update_gui_list();
+    void recv_update_gui_sending_indicator(bool i_state);
+    void recv_update_gui_ID(int i_ID);
 
 private:
     Ui::MainWindow *ui;

@@ -14,17 +14,24 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->gui_IP->setPlaceholderText("example: 111.111.111");
+    ui->gui_IP->setPlaceholderText("example: 111.111.111 (ipv4)");
+    ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #949494;}");
+    ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
 
-    //DEBUG
-    ui->gui_IP->setText("239.255.255.250");
-    ui->gui_port->setValue(1900);
-    //DEBUG
-
-    ui->gui_internal_state->setReadOnly(true);
+    ui->gui_ID->setReadOnly(true);
     ui->gui_PTT->setEnabled(false);
 
-    connect(m_user, SIGNAL(update_gui_list()), this, SLOT(update_gui_list()));
+    connect(m_user, SIGNAL(send_update_gui_list()), this, SLOT(recv_update_gui_list()));
+    connect(m_user, SIGNAL(send_update_gui_sending_indicator(bool)),
+              this, SLOT(recv_update_gui_sending_indicator(bool)));
+    connect(m_user, SIGNAL(send_update_gui_ID(int)),
+              this, SLOT(recv_update_gui_ID(int)));
+
+    //***********************************************************************************************************************************************************************
+    //***********************************************************************************************************************************************************************
+    //TODO: problema con i segnali quando ci si disconnette poi non sono più collegati per via del metodo bool User::quit_group()   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //***********************************************************************************************************************************************************************
+    //***********************************************************************************************************************************************************************
 }
 
 MainWindow::~MainWindow()
@@ -51,6 +58,9 @@ void MainWindow::on_gui_join_clicked()
         ui->gui_IP->setEnabled(false);
         ui->gui_port->setEnabled(false);
 
+        ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
+        ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #73B504;}");
+
     } else
     {
         if (m_user->quit_group())
@@ -64,6 +74,9 @@ void MainWindow::on_gui_join_clicked()
             ui->gui_port->setEnabled(true);
 
             ui->gui_connected_user->clear();
+
+            ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #949494;}");
+            ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
         }
     }
 
@@ -80,7 +93,7 @@ void MainWindow::on_gui_PTT_released()
      m_user->PTT_released();
 }
 
-void MainWindow::update_gui_list()
+void MainWindow::recv_update_gui_list()
 {
     ui->gui_connected_user->clear();
 
@@ -88,4 +101,16 @@ void MainWindow::update_gui_list()
     {
         ui->gui_connected_user->addItem(QString::number(user));
     }
+}
+
+void MainWindow::recv_update_gui_sending_indicator(bool i_state)
+{
+    (i_state)? ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #73B504; }"):
+               ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
+}
+
+void MainWindow::recv_update_gui_ID(int i_ID)
+{
+    (0 <= i_ID)? ui->gui_ID->setText(QString::number(i_ID)):
+                 ui->gui_ID->clear();
 }
