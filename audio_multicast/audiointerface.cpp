@@ -6,6 +6,8 @@ AudioInterface::AudioInterface():
     m_audio_input(0), m_audio_output(0), m_input(0)
 {
 
+    connect(&m_timer_check_samples_len, SIGNAL(timeout()),
+            this, SLOT(check_sample_len_timeout()));
 }
 
 AudioInterface::~AudioInterface()
@@ -87,10 +89,6 @@ void AudioInterface::data_ready_to_read()
     if(sample_buffer_size > 4096)
         sample_buffer_size = 4096;
 
-    //char* temp_data = new char[sample_buffer_size];
-    //Read sound samples from input device to buffer
-    //int64 read_sample_buffer_size = m_input->read(temp_data, sample_buffer_size);
-
     // low_pass_filter(temp_data, sample_buffer_size);
 
     if(sample_buffer_size > 0)
@@ -98,14 +96,43 @@ void AudioInterface::data_ready_to_read()
         //qDebug() <<  " sample ready: " << read_sample_buffer_size;
         //QByteArray data = QByteArray(temp_data);
 
-        QByteArray data = m_input->read(sample_buffer_size);
+        //QByteArray data = m_input->read(sample_buffer_size);
+        m_samples.append(m_input->read(sample_buffer_size));
+
+        if(m_samples.size() < 512)
+        {
+            m_prev_samples_len = m_samples.size();
+            m_timer_check_samples_len.setSingleShot(true);
+            m_timer_check_samples_len.start(100);
+
+        } else
+        {
+            if(m_timer_check_samples_len.isActive())
+                m_timer_check_samples_len.stop();
+
+            int index_min = 0;
+            int index_max = index_min + 512;
+
+            QByteArray temp_audio_data = m_samples.mid(index_min, index_max);
+
+            qDebug() << m_samples.size();
+            while(temp_audio_data.size() == 512)
+            {
+                //this signal will be cathced in the Multicast class by the slot Multicast::data_audio_ready(QByteArray& i_data_audio)
+                emit data_ready(temp_audio_data);
+
+                index_min = index_max;
+                index_max += 512;
+                temp_audio_data = m_samples.mid(index_min, index_max);
+            }
+            qDebug() << temp_audio_data.size();
+            m_samples = temp_audio_data;
+        }
 
 
-        //this signal will be cathced in the Multicast class by the slot Multicast::data_audio_ready(QByteArray& i_data_audio)
-        emit data_ready(data);
+
     }
 
-    //delete[] temp_data;
 }
 
 void AudioInterface::audio_reproduce_audio(QByteArray& i_audio_data)
@@ -115,13 +142,13 @@ void AudioInterface::audio_reproduce_audio(QByteArray& i_audio_data)
 
 void AudioInterface::low_pass_filter(char *i_samples, int i_n_sample)
 {
-//    char* y = new char[i_n_sample];
-//    *y = *i_samples;
 
 }
 
 void AudioInterface::check_sample_len_timeout()
 {
     if(m_prev_samples_len == m_samples.size())
-        //emit
+    {
+        emit data_ready(m_samples);
+    }
 }

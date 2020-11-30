@@ -4,7 +4,7 @@
 
 
 User::User():
-     m_ID(201), m_count_call_tout(0)
+     m_ID(201), m_count_call_tout(0),
     m_in_device(QAudioDeviceInfo::defaultInputDevice()),
     m_out_device(QAudioDeviceInfo::defaultOutputDevice())
 {
@@ -36,7 +36,6 @@ bool User::quit_group()
     m_FSM->process(EVENT::E_DISCONNECT);
 
     disconnect(&m_timer, nullptr, this, nullptr);
-
 
     return true;
 }

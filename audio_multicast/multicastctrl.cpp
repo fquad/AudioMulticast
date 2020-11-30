@@ -43,7 +43,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray* i_data, quint8 i_priority) //
     {
         if(i_e == EVENT::E_RECV_UPDATE)
         {
-            m_multicast->update_user(i_data);
+            m_multicast->update_user(*i_data);
             return;
         }
         if(i_e == EVENT::E_CHECK_LIST)
