@@ -28,63 +28,87 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="horizontal_layout_3">
+     <layout class="QVBoxLayout" name="input_layout">
       <item>
-       <layout class="QVBoxLayout" name="vertica_layout_4">
+       <layout class="QHBoxLayout" name="input_layout_sub_1">
         <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Group IP</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="input_layout_sub_1_1">
+          <item>
+           <widget class="QLabel" name="label_IP">
+            <property name="text">
+             <string>Group IP</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_port">
+            <property name="text">
+             <string>Port</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_input_device">
+            <property name="text">
+             <string>Audio input device</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_output_device">
+            <property name="text">
+             <string>Audio output device</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Port</string>
+         <spacer name="horizontal_spacer_1">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <spacer name="horizontal_spacer_1">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="vertical_layout_3">
-        <item>
-         <widget class="QLineEdit" name="gui_IP">
-          <property name="text">
-           <string>239.255.255.250</string>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
           </property>
-         </widget>
+         </spacer>
         </item>
         <item>
-         <widget class="QSpinBox" name="gui_port">
-          <property name="minimum">
-           <number>40000</number>
-          </property>
-          <property name="maximum">
-           <number>50000</number>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="input_layout_sub_1_2">
+          <item>
+           <widget class="QLineEdit" name="gui_IP">
+            <property name="text">
+             <string>239.255.255.250</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="gui_audio_output_box"/>
+          </item>
+          <item>
+           <widget class="QComboBox" name="gui_audio_input_box"/>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="gui_port">
+            <property name="minimum">
+             <number>40000</number>
+            </property>
+            <property name="maximum">
+             <number>50000</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="input_layout_sub_2">
       <item>
        <widget class="QPushButton" name="gui_join">
         <property name="text">
@@ -115,42 +139,6 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="Audio_settings_layout">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetNoConstraint</enum>
-      </property>
-      <item>
-       <widget class="QLabel" name="audio_output_label">
-        <property name="text">
-         <string>audio output device: </string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="gui_audio_output_box"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="audio_input_label">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Audio input device:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="gui_audio_input_box"/>
-      </item>
-     </layout>
-    </item>
-    <item>
      <widget class="Line" name="line_1">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -168,7 +156,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizzontal_layout_1">
+     <layout class="QHBoxLayout" name="info_layout">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -286,7 +274,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="PTT_layout">
       <item>
        <widget class="QPushButton" name="gui_PTT">
         <property name="text">
@@ -327,7 +315,7 @@
      <x>0</x>
      <y>0</y>
      <width>690</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

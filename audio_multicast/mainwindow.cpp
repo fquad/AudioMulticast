@@ -19,7 +19,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
 
     ui->gui_ID->setReadOnly(true);
+
     ui->gui_PTT->setEnabled(false);
+    ui->gui_connected_user->setEnabled(false);
+    ui->gui_ID->setEnabled(false);
+    ui->label_ID->setEnabled(false);
+    ui->label_connected_users_list->setEnabled(false);
+    ui->label_info->setEnabled(false);
 
     connect(m_user, SIGNAL(send_update_gui_list()),
               this, SLOT(recv_update_gui_list()));
@@ -74,15 +80,16 @@ void MainWindow::on_gui_join_clicked()
             ui->gui_connected_user->clear();
             //the quit button becomes join button
             ui->gui_join->setText("join");
-            ui->gui_PTT->setEnabled(false);
-
-            ui->gui_IP->setEnabled(true);
-            ui->gui_port->setEnabled(true);
-
-            ui->gui_connected_user->clear();
 
             ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #949494;}");
             ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
+
+            ui->gui_PTT->setEnabled(false);
+            ui->gui_connected_user->setEnabled(false);
+            ui->gui_ID->setEnabled(false);
+            ui->label_ID->setEnabled(false);
+            ui->label_connected_users_list->setEnabled(false);
+            ui->label_info->setEnabled(false);
         }
     }
 
@@ -117,14 +124,19 @@ void MainWindow::recv_update_gui_sending_indicator(bool i_state)
 
 void MainWindow::recv_update_gui_ID(int i_ID)
 {
-    if(0 <= i_ID)
+    if(0 <= i_ID && 200 >= i_ID)
     {
         ui->gui_ID->setText(QString::number(i_ID));
 
         //the PTT is now available
-        ui->gui_PTT->setEnabled(true);
         ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
         ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #73B504;}");
+        ui->gui_PTT->setEnabled(true);
+        ui->gui_connected_user->setEnabled(true);
+        ui->gui_ID->setEnabled(true);
+        ui->label_ID->setEnabled(true);
+        ui->label_connected_users_list->setEnabled(true);
+        ui->label_info->setEnabled(true);
 
     } else ui->gui_ID->clear();
 }
