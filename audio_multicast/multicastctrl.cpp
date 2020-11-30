@@ -7,9 +7,9 @@ MulticastCtrl::MulticastCtrl(User* i_user) :
   m_multicast(new Multicast(i_user)),
   m_ingroup(false),
   m_is_sending(false),
+  m_retry_attemp(0),
   m_current_state(state_nogroup),
-  m_first_time(true),
-  m_retry_attemp(0)
+  m_first_time(true)
 {
     //connect the timers to their callback
     connect(&m_rts_timer, SIGNAL(timeout()), this, SLOT(rts_timeout()));
@@ -24,6 +24,7 @@ MulticastCtrl::MulticastCtrl(User* i_user) :
 
 MulticastCtrl::~MulticastCtrl()
 {
+    delete m_multicast;
     qDebug() << "FSM deleted";
 }
 
@@ -32,8 +33,11 @@ void MulticastCtrl::set_user_list(QMap<quint8, int>* i_user_list_ptr)
     m_multicast->set_user_list(i_user_list_ptr);
 }
 
-void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
+void MulticastCtrl::process(EVENT i_e, QByteArray* i_data, quint8 i_priority) //TODO: HANDLE PRIORITY
 {
+
+    //if(i_data != nullptr)//TODO : vedere se può funzionare
+       // i_data->insert(0, i_priority);
 
     if(m_ingroup == true)
     {
@@ -102,7 +106,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 {
                     //Audio data packet received
 
-                    m_multicast->reproduce_audio(i_data);
+                    m_multicast->reproduce_audio(*i_data);
                     break;
 
                 } else if(i_e == EVENT::E_RECV_REQUEST)
@@ -114,7 +118,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                     m_cts_timer.setSingleShot(true);
                     m_cts_timer.start(t_timeout);
 
-                    m_multicast->answer_RTS(true, i_data);
+                    m_multicast->answer_RTS(true, *i_data);
 
                     break;
 
@@ -139,13 +143,13 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 if(i_e == EVENT::E_RECV_REQUEST)
                 {
                     //Received a request of sending from another user
-                    m_multicast->answer_RTS(false, i_data);
+                    m_multicast->answer_RTS(false, *i_data);
                     break;
 
                 } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
                 {
                     //Audio data packet received
-                    m_multicast->reproduce_audio(i_data);
+                    m_multicast->reproduce_audio(*i_data);
                     break;
 
                 }
@@ -155,14 +159,14 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                 if(i_e == EVENT::E_RECV_REQUEST)
                 {
                     //Received a request to send from another user
-                    m_multicast->answer_RTS(false, i_data);
-                    m_multicast->add_RTS(i_data);
+                    m_multicast->answer_RTS(false, *i_data);
+                    m_multicast->add_RTS(*i_data);
                     break;
 
                 } else if(i_e == EVENT::E_ANSWER_TO_RTS)
                 {
                     //received an answer to a request to send
-                    m_multicast->add_answer_to_list(i_data);
+                    m_multicast->add_answer_to_list(*i_data);
                     break;
 
                 } else if(i_e == EVENT::E_RECV_AUDIO_DATA)
@@ -175,7 +179,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                     m_rts_timer.stop();
 
                     //Audio data packet received
-                    m_multicast->reproduce_audio(i_data);
+                    m_multicast->reproduce_audio(*i_data);
 
                     break;
                 }

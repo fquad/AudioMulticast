@@ -84,7 +84,7 @@ void AudioInterface::data_ready_to_read()
     qint64 sample_buffer_size = m_audio_input->bytesReady();
 
     //Limit sample size
-    if(sample_buffer_size > 4096) //4096
+    if(sample_buffer_size > 4096)
         sample_buffer_size = 4096;
 
     //char* temp_data = new char[sample_buffer_size];
@@ -117,15 +117,11 @@ void AudioInterface::low_pass_filter(char *i_samples, int i_n_sample)
 {
 //    char* y = new char[i_n_sample];
 //    *y = *i_samples;
-    char* _y = i_samples;
-    int y[600];
 
-    for(int i = 0; i<i_n_sample; ++i)
-        y[i]=int(_y[i]);
+}
 
-
-    
-    for(int i = 6; i < i_n_sample-6; ++i)
-        _y[i] = char ( ( y[i] + y[i-1] + y[i+1] + y[i-2] + y[i+2] + y[i-3] + y[i+3] +
-                 y[i-4] + y[i+4] + y[i-5] + y[i+5] + y[i-6] + y[i+6] )  * 1/13);
+void AudioInterface::check_sample_len_timeout()
+{
+    if(m_prev_samples_len == m_samples.size())
+        //emit
 }

@@ -7,10 +7,10 @@
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , m_user(new User())
-    , ui(new Ui::MainWindow)
-    , m_is_join(true)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      m_user(new User()),
+      m_is_join(true)
 {
     ui->setupUi(this);
 
@@ -21,7 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gui_ID->setReadOnly(true);
     ui->gui_PTT->setEnabled(false);
 
-    connect(m_user, SIGNAL(send_update_gui_list()), this, SLOT(recv_update_gui_list()));
+    connect(m_user, SIGNAL(send_update_gui_list()),
+              this, SLOT(recv_update_gui_list()));
     connect(m_user, SIGNAL(send_update_gui_sending_indicator(bool)),
               this, SLOT(recv_update_gui_sending_indicator(bool)));
     connect(m_user, SIGNAL(send_update_gui_ID(int)),
@@ -62,14 +63,9 @@ void MainWindow::on_gui_join_clicked()
 
         //the join button changes his text and becomes the quit button
         ui->gui_join->setText("quit");
-        //the PTT is now available
-        ui->gui_PTT->setEnabled(true);
 
         ui->gui_IP->setEnabled(false);
         ui->gui_port->setEnabled(false);
-
-        ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
-        ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #73B504;}");
 
     } else
     {
@@ -121,8 +117,16 @@ void MainWindow::recv_update_gui_sending_indicator(bool i_state)
 
 void MainWindow::recv_update_gui_ID(int i_ID)
 {
-    (0 <= i_ID)? ui->gui_ID->setText(QString::number(i_ID)):
-                 ui->gui_ID->clear();
+    if(0 <= i_ID)
+    {
+        ui->gui_ID->setText(QString::number(i_ID));
+
+        //the PTT is now available
+        ui->gui_PTT->setEnabled(true);
+        ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
+        ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #73B504;}");
+
+    } else ui->gui_ID->clear();
 }
 
 void MainWindow::on_gui_audio_input_box_currentIndexChanged(int index)

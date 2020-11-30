@@ -1,10 +1,11 @@
 #ifndef USER_H
 #define USER_H
 
-#include <QList>
 #include "multicastctrl.h"
 #include <QByteArray>
 #include <QAudioDeviceInfo>
+
+#include<QTimer>
 
 class User: public QObject
 {
@@ -44,7 +45,7 @@ private:
 
     QMap<quint8, int> m_connected_user;
 
-    QTimer* m_timer;
+    QTimer m_timer;
 
     QHostAddress m_IP;
     quint16 m_port;

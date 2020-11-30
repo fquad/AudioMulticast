@@ -43,7 +43,7 @@ public:
     ~MulticastCtrl();
 
     bool get_is_sending();
-    void process(EVENT e, QByteArray data = nullptr);
+    void process(EVENT e, QByteArray* i_data = nullptr, quint8 i_priority = -1); //TODO: serve QByteArary i_data?
     void set_user_list(QMap<quint8, int>* i_user_list_ptr);
 
     //TODO m_priority should be private or protected

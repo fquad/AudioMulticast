@@ -22,7 +22,7 @@ void Multicast::data_audio_ready(QByteArray& i_data_audio)
     //qDebug() << i_data_audio;
     qDebug() << "audio size: " << i_data_audio.size();
     send(MSG_TYPE::AUDIO, audio_data);
-    //reproduce_audio(audio_data);
+    reproduce_audio(audio_data);
 }
 
 void Multicast::reproduce_audio(QByteArray i_audio_data)

@@ -1,20 +1,16 @@
 #include "user.h"
 
 #include<QDebug>
-#include<QTimer>
 
 
 User::User():
-    m_count_call_tout(0),
-    m_timer(new QTimer(this)), m_ID(201),
+     m_ID(201), m_count_call_tout(0)
     m_in_device(QAudioDeviceInfo::defaultInputDevice()),
     m_out_device(QAudioDeviceInfo::defaultOutputDevice())
 {
     m_FSM = new MulticastCtrl(this);
     m_FSM->set_user_list(&m_connected_user);
 
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
-    m_timer->start(1000);
 }
 
 User::~User()
@@ -23,11 +19,14 @@ User::~User()
 }
 
 bool User::join_group(QHostAddress& i_IP, quint16 i_port)
-{
+{    
     m_IP = i_IP;
     m_port = i_port;
 
     m_FSM->process(EVENT::E_CONNECT);
+
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
+    m_timer.start(1000);
 
     return true;
 }
@@ -36,8 +35,8 @@ bool User::quit_group()
 {
     m_FSM->process(EVENT::E_DISCONNECT);
 
-    //TODO: problema con questo disconnect
-    disconnect(this, nullptr, nullptr, nullptr);
+    disconnect(&m_timer, nullptr, this, nullptr);
+
 
     return true;
 }
@@ -58,7 +57,7 @@ void User::timeout_send_name()
     {
         //send every 1 second the user id for updating the list
         QByteArray t_name = QByteArray::number(m_ID);
-        m_FSM->process(EVENT::E_SEND_UPDATE, t_name);
+        m_FSM->process(EVENT::E_SEND_UPDATE, &t_name);
     }
 }
 
@@ -96,7 +95,7 @@ void User::receive(QByteArray& i_msg)
         switch(t_type)
         {
         case Multicast::MSG_TYPE::UPDATE_NAME:
-            m_FSM->process(EVENT::E_RECV_UPDATE, t_msg);
+            m_FSM->process(EVENT::E_RECV_UPDATE, &t_msg);
             break;
 
         case Multicast::MSG_TYPE::MSG:
@@ -104,15 +103,15 @@ void User::receive(QByteArray& i_msg)
             break;
 
         case Multicast::MSG_TYPE::ANSWER:
-            m_FSM->process(EVENT::E_ANSWER_TO_RTS, t_msg);
+            m_FSM->process(EVENT::E_ANSWER_TO_RTS, &t_msg);
             break;
 
         case Multicast::MSG_TYPE::REQUEST:
-            m_FSM->process(EVENT::E_RECV_REQUEST, t_msg);
+            m_FSM->process(EVENT::E_RECV_REQUEST, &t_msg);
             break;
 
         case Multicast::MSG_TYPE::AUDIO:
-            m_FSM->process(EVENT::E_RECV_AUDIO_DATA, t_msg);
+            m_FSM->process(EVENT::E_RECV_AUDIO_DATA, &t_msg);
             break;
         }
     }

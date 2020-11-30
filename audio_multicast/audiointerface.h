@@ -1,10 +1,9 @@
 #ifndef AUDIOINTERFACE_H
 #define AUDIOINTERFACE_H
 
-#include <QByteArray>
 #include <qaudioinput.h>
 #include <qaudiooutput.h>
-#include <QBuffer>
+#include <QTimer>
 
 class AudioInterface: public QObject
 {
@@ -30,11 +29,17 @@ private:
     QIODevice *m_input;
     QIODevice *m_output;
 
+    QTimer m_timer_check_samples_len;
+
+    QByteArray m_samples;
+    int m_prev_samples_len;
+
 signals:
     void data_ready(QByteArray&);
 
 private slots:
     void data_ready_to_read();
+    void check_sample_len_timeout();
 };
 
 #endif // AUDIOINTERFACE_H
