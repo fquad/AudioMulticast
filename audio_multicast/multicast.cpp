@@ -3,7 +3,7 @@
 #include "user.h"
 
 Multicast::Multicast(User* i_user):
-    m_user(i_user), m_id(m_user->get_ID()),
+    m_user(i_user),
     m_timer_count(0)
 {
     connect(&m_socket, SIGNAL(new_packet_ready(QByteArray&)),
@@ -16,10 +16,11 @@ Multicast::Multicast(User* i_user):
 void Multicast::data_audio_ready(QByteArray& i_data_audio)
 {
     QByteArray audio_data;
-    audio_data.append(m_id);
+    audio_data.append(m_user->get_ID());
     audio_data.append(i_data_audio);
 
-    qDebug() << i_data_audio;
+    //qDebug() << i_data_audio;
+    qDebug() << "audio size: " << i_data_audio.size();
     send(MSG_TYPE::AUDIO, audio_data);
     //reproduce_audio(audio_data);
 }
@@ -37,7 +38,7 @@ void Multicast::reproduce_audio(QByteArray i_audio_data)
 //            + " > "
 //            + audio_data;
 
-    m_audio_interface.audio_reproduce_audio(i_audio_data);
+    m_audio_interface.audio_reproduce_audio(audio_data);
 }
 
 void Multicast::start_send_audio()
@@ -59,9 +60,9 @@ void Multicast::send_RTS()
 {
     //send a request to start sending audio
     QByteArray msg;
-    msg.append(m_id);
+    msg.append(m_user->get_ID());
 
-    qDebug() << m_id
+    qDebug() << m_user->get_ID()
              << "want to send";
 
     send(MSG_TYPE::REQUEST, msg);
@@ -115,9 +116,9 @@ void Multicast::check_list()
 
 void Multicast::send_user_id()
 {
-    qDebug() << QString::number(m_id) << " sent is id";
+    qDebug() << QString::number(m_user->get_ID()) << " sent is id";
     QByteArray msg;
-    msg.append(m_id);
+    msg.append(m_user->get_ID());
     send(MSG_TYPE::UPDATE_NAME, msg);
 }
 
@@ -131,7 +132,7 @@ void Multicast::answer_RTS(bool i_answer, QByteArray i_requester_id)
 
     if(r_id > 0 && r_id < 255)
     {
-        qDebug() << QString::number(m_id)
+        qDebug() << QString::number(m_user->get_ID())
                  << " answered : "
                  << QString::number(i_answer)
                  << " to : "
@@ -139,7 +140,7 @@ void Multicast::answer_RTS(bool i_answer, QByteArray i_requester_id)
 
         QByteArray msg;
 
-        msg.append(m_id);
+        msg.append(m_user->get_ID());
         msg.append(r_id);
         msg.append(i_answer);
 
@@ -154,20 +155,15 @@ bool Multicast::evaluate_list()
      * the user is able to send or not
      */
 
-    int n_sender = m_request_list.size() + 1;
+;
     int n_user = m_connected_user->size() + 1;
-    int n_answer =  m_answer_list.size();
-    int n_permission = 0;
 
-    qDebug() << m_id << " is evaluating his list";
+    qDebug() << m_user->get_ID() << " is evaluating his list";
     qDebug() << "---------------";
-    //qDebug() << "   n sender    : " + QString::number(n_sender);
-    //qDebug() << "   n answer    : " + QString::number(n_answer);
-    //qDebug() << "   n user      : " + QString::number(n_user);
 
     if((n_user - 1) < 1){
         //No one in the group
-        qDebug() << "permission garanted (alone in the group)";
+        qDebug() << "permission granted (alone in the group)";
         qDebug() << "---------------";
         return true;
     }
@@ -183,7 +179,7 @@ bool Multicast::evaluate_list()
 
     }
 
-    if( max_id == m_id){
+    if( max_id == m_user->get_ID()){
         qDebug() << "permission granted";
         qDebug() << "---------------";
         start_send_audio();
@@ -200,7 +196,7 @@ void Multicast::add_RTS(QByteArray i_data)
     //add the received Request To Send to the list with all the requests
 
     quint8 id = i_data.at(0);
-    qDebug() << m_id
+    qDebug() << m_user->get_ID()
              << " added: "
              << id
              << " to request to list";
@@ -221,7 +217,7 @@ void Multicast::add_answer_to_list(QByteArray i_data)
         n_answer = m_answer_list.value(id) + answer;
         m_answer_list.insert(id,n_answer);
     }
-    qDebug() << m_id
+    qDebug() << m_user->get_ID()
              << " has answer value: "
              << answer;
 }
@@ -254,6 +250,8 @@ void Multicast::connect_to_group()
     m_socket.setIP(m_user->get_IP());
     m_socket.setPort(m_user->get_port());
     m_socket.start();
+
+    m_audio_interface.audio_init(m_user->get_in_device(), m_user->get_out_device());
 }
 
 void Multicast::disconnect_from_group()
@@ -261,7 +259,7 @@ void Multicast::disconnect_from_group()
     m_socket.close();
     m_connected_user->clear();
     m_connected_user_prev.clear();
-    m_id = 201;
+    m_user->set_ID(201);
 
     emit m_user->send_update_gui_ID(-1);
 }
@@ -285,7 +283,6 @@ void Multicast::set_user_ID()
     }
 
     qDebug() << "selected ID: " << ID;
-    m_id = ID; //TODO: togliere m_id e sostituire con m_user->get_ID()
     m_user->set_ID(ID);
 
     emit m_user->send_update_gui_ID(ID);

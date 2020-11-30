@@ -15,15 +15,15 @@ public:
 
     void audio_input_start();
     void audio_input_stop();
-
+    void audio_init(QAudioDeviceInfo in, QAudioDeviceInfo out);
     void audio_reproduce_audio(QByteArray& i_audio_data);
 
 private:
-    void audio_init();
+
     void low_pass_filter(char* i_samples, int i_n_sample);
 
-    QAudioDeviceInfo m_input_device;
-    QAudioDeviceInfo m_output_device;
+    //QAudioDeviceInfo m_input_device;
+    //QAudioDeviceInfo m_output_device;
     QAudioFormat m_format;
     QAudioInput *m_audio_input;
     QAudioOutput *m_audio_output;

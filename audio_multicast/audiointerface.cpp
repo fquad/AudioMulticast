@@ -3,13 +3,9 @@
 #include <QDebug>
 
 AudioInterface::AudioInterface():
-    m_input_device(QAudioDeviceInfo::defaultInputDevice()),
-    m_output_device(QAudioDeviceInfo::defaultOutputDevice()),
     m_audio_input(0), m_audio_output(0), m_input(0)
 {
-    audio_init();
 
-    m_output = m_audio_output->start();
 }
 
 AudioInterface::~AudioInterface()
@@ -21,32 +17,42 @@ AudioInterface::~AudioInterface()
     delete m_audio_output;
 }
 
-void AudioInterface::audio_init()
+void AudioInterface::audio_init(QAudioDeviceInfo in, QAudioDeviceInfo out)
 {
     m_format.setSampleRate(8000);                       //set frequency to 8000
     m_format.setChannelCount(1);                        //set channels to mono
-    m_format.setSampleSize(16);//m_format.setSampleSize(16);                         //set sample size to 16 bit
+    m_format.setSampleSize(8);//m_format.setSampleSize(16);                         //set sample size to 16 bit
     m_format.setSampleType(QAudioFormat::UnSignedInt);//m_format.setSampleType(QAudioFormat::UnSignedInt);  //Sample type as usigned integer sample
     m_format.setByteOrder(QAudioFormat::LittleEndian);  //Byte order
     m_format.setCodec("audio/pcm");                     //set codec as simple audio/pcm
 
-    QAudioDeviceInfo infoIn(QAudioDeviceInfo::defaultInputDevice());
+
+    QAudioDeviceInfo infoIn = in;
+    QAudioDeviceInfo infoOut = out;
+    /*
     if (!infoIn.isFormatSupported(m_format))
     {
         //Default format not supported - trying to use nearest
         m_format = infoIn.nearestFormat(m_format);
     }
 
-    QAudioDeviceInfo infoOut(QAudioDeviceInfo::defaultOutputDevice());
-
     if (!infoOut.isFormatSupported(m_format))
     {
        //Default format not supported - trying to use nearest
         m_format = infoOut.nearestFormat(m_format);
     }
+*/
+    qDebug() << "codec: " << m_format.codec();
+    qDebug() << "sampleRate: " << m_format.sampleRate();
+    qDebug() << "sampleSize: " << m_format.sampleSize();
+    qDebug() << "sampleType: " << m_format.sampleType();
+    qDebug() << "byteOrder: " << m_format.byteOrder();
+    qDebug() << "bytePerFrame: " << m_format.bytesPerFrame();
 
-    m_audio_input = new QAudioInput(m_input_device, m_format);
-    m_audio_output = new QAudioOutput(m_output_device, m_format);
+    m_audio_input = new QAudioInput(infoIn, m_format);
+    m_audio_output = new QAudioOutput(infoOut, m_format);
+
+    m_output = m_audio_output->start();
 }
 
 void AudioInterface::audio_input_start()
@@ -81,22 +87,25 @@ void AudioInterface::data_ready_to_read()
     if(sample_buffer_size > 4096) //4096
         sample_buffer_size = 4096;
 
-    char* temp_data = new char[sample_buffer_size];
+    //char* temp_data = new char[sample_buffer_size];
     //Read sound samples from input device to buffer
-    qint64 read_sample_buffer_size = m_input->read(temp_data, sample_buffer_size);
+    //int64 read_sample_buffer_size = m_input->read(temp_data, sample_buffer_size);
 
     // low_pass_filter(temp_data, sample_buffer_size);
 
-    if(read_sample_buffer_size > 0)
+    if(sample_buffer_size > 0)
     {
-        qDebug() <<  " sample ready: " << sample_buffer_size;
-        QByteArray data = QByteArray(temp_data);
+        //qDebug() <<  " sample ready: " << read_sample_buffer_size;
+        //QByteArray data = QByteArray(temp_data);
 
-        //this signal will be cathced in the Mulicast class by the slot Multicast::data_audio_ready(QByteArray& i_data_audio)
+        QByteArray data = m_input->read(sample_buffer_size);
+
+
+        //this signal will be cathced in the Multicast class by the slot Multicast::data_audio_ready(QByteArray& i_data_audio)
         emit data_ready(data);
     }
 
-    delete[] temp_data;
+    //delete[] temp_data;
 }
 
 void AudioInterface::audio_reproduce_audio(QByteArray& i_audio_data)

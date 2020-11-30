@@ -40,7 +40,6 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
         if(i_e == EVENT::E_RECV_UPDATE)
         {
             m_multicast->update_user(i_data);
-            //qDebug() << "received update";
             return;
         }
         if(i_e == EVENT::E_CHECK_LIST)
@@ -61,11 +60,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             m_multicast->disconnect_from_group();
             m_current_state = State::state_nogroup;
             m_ingroup = false;
-
-            //TODO: lasciare se funziona la selezione ID
             m_first_time = true;
-            //------------------------------------------
-
             return;
         }
     }
@@ -84,20 +79,11 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
 
         switch (m_current_state)
         {
-        /*
+
             case state_nogroup:
-                if(i_e == EVENT::E_CONNECT)
-                {
-                    // user connect to the group
-                    qDebug() << "connected";
-                    m_multicast->connect_to_group();
-                    m_current_state = State::state_idle;
-                    m_ingroup = true;
-                }
             break;
-        */
+
             case state_idle:
-                //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_idle";
                 //TODO chage E_REQUEST_SEND in E_SEND_REQUEST
 
                 if(i_e == EVENT::E_REQUEST_SEND)
@@ -136,8 +122,6 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             break;
 
             case state_cts:
-                //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_cts";
-
                 if(i_e == EVENT::E_REQUEST_SEND)
                 {
                     //PTT button pressed
@@ -168,9 +152,6 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             break;
 
             case state_rts:
-
-                //qDebug() << QString::number(m_multicast->getId()) <<   " FSM state: state_rts";
-
                 if(i_e == EVENT::E_RECV_REQUEST)
                 {
                     //Received a request to send from another user
@@ -201,9 +182,6 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
             break;
 
             case state_sending:
-
-                //qDebug() << QString::number(m_multicast->getId()) <<  " FSM state: state_sending";
-
                 if(i_e == EVENT::E_STOP_SEND)
                 {
                     //PTT button released
@@ -212,12 +190,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray i_data)
                     m_multicast->stop_send_audio();
                     break;
 
-                } //else if(i_e == EVENT::E_SEND_AUDIO_DATA)
-                //{
-                    //audio data available to be sent
-                   // m_multicast->start_send_audio();
-                //    break;
-                //}
+                }
             break;
         }
     }
@@ -230,7 +203,7 @@ bool MulticastCtrl::get_is_sending()
 
 void MulticastCtrl::rts_timeout()
 {
-    qDebug() << QString::number(m_multicast->get_id()) <<   " rts_timeout";
+    qDebug() << " rts_timeout";
     bool answer = m_multicast->evaluate_list();
 
     if(answer)
@@ -271,7 +244,7 @@ void MulticastCtrl::rts_timeout()
 
 void MulticastCtrl::cts_timeout()
 {
-    qDebug() << QString::number(m_multicast->get_id()) <<  " cts_timeout";
+    qDebug() << "cts_timeout";
     m_current_state = State::state_idle;
     m_multicast->clear_request_list();
 }

@@ -50,7 +50,6 @@ public:
     void check_list();
     void update_user(QByteArray& i_user_name);
 
-    inline int  get_id() { return m_id; };
     inline void set_user_list(QMap<quint8, int>* i_user_list_ptr)
     { m_connected_user = i_user_list_ptr; }
 
@@ -59,7 +58,6 @@ private:
 
 
     User* m_user;
-    quint8 m_id;
     int m_timer_count;
 
     QMap<quint8, int>* m_connected_user;

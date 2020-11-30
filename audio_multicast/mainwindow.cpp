@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->gui_IP->setPlaceholderText("example: 111.111.111 (ipv4)");
+    ui->gui_IP->setPlaceholderText("example: 239.255.255.250)");
     ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #949494;}");
     ui->gui_in_group_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
 
@@ -26,6 +26,16 @@ MainWindow::MainWindow(QWidget *parent)
               this, SLOT(recv_update_gui_sending_indicator(bool)));
     connect(m_user, SIGNAL(send_update_gui_ID(int)),
               this, SLOT(recv_update_gui_ID(int)));
+
+    //add audio devices to output combobox
+    for (auto &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput)) {
+        ui->gui_audio_output_box->addItem(deviceInfo.deviceName(), qVariantFromValue(deviceInfo));
+    }
+
+    //add audio devices to input combobox
+    for (auto &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioInput)) {
+        ui->gui_audio_input_box->addItem(deviceInfo.deviceName(), qVariantFromValue(deviceInfo));
+    }
 
     //***********************************************************************************************************************************************************************
     //***********************************************************************************************************************************************************************
@@ -105,7 +115,7 @@ void MainWindow::recv_update_gui_list()
 
 void MainWindow::recv_update_gui_sending_indicator(bool i_state)
 {
-    (i_state)? ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #73B504; }"):
+    (i_state)? ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #73B504;}"):
                ui->gui_sending_indicator->setStyleSheet("QLabel { background-color: #E95D5D;}");
 }
 
@@ -113,4 +123,14 @@ void MainWindow::recv_update_gui_ID(int i_ID)
 {
     (0 <= i_ID)? ui->gui_ID->setText(QString::number(i_ID)):
                  ui->gui_ID->clear();
+}
+
+void MainWindow::on_gui_audio_input_box_currentIndexChanged(int index)
+{
+    m_user->set_in_device(QAudioDeviceInfo::availableDevices(QAudio::AudioInput).at(index));
+}
+
+void MainWindow::on_gui_audio_output_box_currentIndexChanged(int index)
+{
+    m_user->set_in_device(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput).at(index));
 }

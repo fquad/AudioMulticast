@@ -25,6 +25,10 @@ private slots:
     void recv_update_gui_sending_indicator(bool i_state);
     void recv_update_gui_ID(int i_ID);
 
+    void on_gui_audio_input_box_currentIndexChanged(int index);
+
+    void on_gui_audio_output_box_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
 
