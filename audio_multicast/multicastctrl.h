@@ -10,11 +10,11 @@
 
 const int max_retry_attemp = 3;
 
-const int t_timeout = 500;
+const int t_timeout = 100;
 const int t_timeout_received_audio_data = 50;
 
 const int timeout_user_update = 1000;
-const int t_timeout_select_ID = 3000;
+const int t_timeout_select_ID = 12^00;
 
 enum EVENT
 {

@@ -86,12 +86,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="gui_audio_output_box"/>
-          </item>
-          <item>
-           <widget class="QComboBox" name="gui_audio_input_box"/>
-          </item>
-          <item>
            <widget class="QSpinBox" name="gui_port">
             <property name="minimum">
              <number>40000</number>
@@ -100,6 +94,12 @@
              <number>50000</number>
             </property>
            </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="gui_audio_input_box"/>
+          </item>
+          <item>
+           <widget class="QComboBox" name="gui_audio_output_box"/>
           </item>
          </layout>
         </item>

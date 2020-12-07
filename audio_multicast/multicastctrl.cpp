@@ -78,9 +78,9 @@ void MulticastCtrl::process(EVENT i_e, QByteArray* i_data, quint8 i_priority) //
         m_select_ID_timer.start(t_timeout_select_ID);
         m_current_state = State::state_idle;
         m_ingroup = true;
-    }else{
 
-
+    }else
+    {
         switch (m_current_state)
         {
 

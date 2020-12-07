@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       m_user(new User()),
-      m_is_join(true)
+      m_is_join(true), m_is_sending(false), m_can_release(false)
 {
     ui->setupUi(this);
 
@@ -34,6 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_user, SIGNAL(send_update_gui_ID(int)),
               this, SLOT(recv_update_gui_ID(int)));
 
+    connect(&m_can_release_timer, SIGNAL(timeout()),
+            this, SLOT(can_release_timeout()));
+
+
     //add audio devices to output combobox
     for (auto &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioOutput)) {
         ui->gui_audio_output_box->addItem(deviceInfo.deviceName(), qVariantFromValue(deviceInfo));
@@ -44,11 +48,6 @@ MainWindow::MainWindow(QWidget *parent)
         ui->gui_audio_input_box->addItem(deviceInfo.deviceName(), qVariantFromValue(deviceInfo));
     }
 
-    //***********************************************************************************************************************************************************************
-    //***********************************************************************************************************************************************************************
-    //TODO: problema con i segnali quando ci si disconnette poi non sono più collegati per via del metodo bool User::quit_group()   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //***********************************************************************************************************************************************************************
-    //***********************************************************************************************************************************************************************
 }
 
 MainWindow::~MainWindow()
@@ -73,6 +72,9 @@ void MainWindow::on_gui_join_clicked()
         ui->gui_IP->setEnabled(false);
         ui->gui_port->setEnabled(false);
 
+        ui->gui_audio_input_box->setEnabled(false);
+        ui->gui_audio_output_box->setEnabled(false);
+
     } else
     {
         if (m_user->quit_group())
@@ -90,20 +92,16 @@ void MainWindow::on_gui_join_clicked()
             ui->label_ID->setEnabled(false);
             ui->label_connected_users_list->setEnabled(false);
             ui->label_info->setEnabled(false);
+
+            ui->gui_IP->setEnabled(true);
+            ui->gui_port->setEnabled(true);
+
+            ui->gui_audio_input_box->setEnabled(true);
+            ui->gui_audio_output_box->setEnabled(true);
         }
     }
 
     m_is_join = !m_is_join;
-}
-
-void MainWindow::on_gui_PTT_pressed()
-{
-    m_user->PTT_pressed();
-}
-
-void MainWindow::on_gui_PTT_released()
-{
-     m_user->PTT_released();
 }
 
 void MainWindow::recv_update_gui_list()
@@ -149,4 +147,31 @@ void MainWindow::on_gui_audio_input_box_currentIndexChanged(int index)
 void MainWindow::on_gui_audio_output_box_currentIndexChanged(int index)
 {
     m_user->set_in_device(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput).at(index));
+}
+
+
+void MainWindow::on_gui_PTT_clicked()
+{
+    m_is_sending = !m_is_sending;
+
+
+    if(m_is_sending)
+    {
+        m_user->PTT_pressed();
+        ui->gui_PTT->setEnabled(m_can_release);
+
+        m_can_release_timer.setSingleShot(true);
+        m_can_release_timer.start(500);
+
+    } else if(m_can_release)
+    {
+        m_user->PTT_released();
+        m_can_release=false;
+    }
+}
+
+void MainWindow::can_release_timeout()
+{
+    m_can_release = true;
+    ui->gui_PTT->setEnabled(m_can_release);
 }

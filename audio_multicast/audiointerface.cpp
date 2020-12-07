@@ -18,8 +18,8 @@ AudioInterface::~AudioInterface()
 
 void AudioInterface::audio_init(QAudioDeviceInfo in, QAudioDeviceInfo out)
 {
-    m_format.setSampleRate(8000);                       //set frequency to 8000
-    m_format.setChannelCount(1);                        //set channels to mono
+    m_format.setSampleRate(8000);                           //set frequency to 8000
+    m_format.setChannelCount(1);                            //set channels to mono
     m_format.setSampleSize(8);//m_format.setSampleSize(16);                         //set sample size to 16 bit
     m_format.setSampleType(QAudioFormat::UnSignedInt);//m_format.setSampleType(QAudioFormat::UnSignedInt);  //Sample type as usigned integer sample
     m_format.setByteOrder(QAudioFormat::LittleEndian);  //Byte order
@@ -98,7 +98,6 @@ void AudioInterface::data_ready_to_read()
             int index_max = index_min + 512;
 
             QByteArray temp_audio_data = m_samples.mid(index_min, index_max);
-
             while(temp_audio_data.size() == 512)
             {
                 digital_processing(temp_audio_data);
@@ -111,6 +110,7 @@ void AudioInterface::data_ready_to_read()
                 temp_audio_data = m_samples.mid(index_min, index_max);
             }
             m_samples = temp_audio_data;
+
         }
     }
 }

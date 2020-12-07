@@ -19,7 +19,7 @@ public:
 
 private:
 
-    void low_pass_filter(char* i_samples, int i_n_sample);
+    void digital_processing(QByteArray& i_samples);
 
     //QAudioDeviceInfo m_input_device;
     //QAudioDeviceInfo m_output_device;
