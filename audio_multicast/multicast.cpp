@@ -155,13 +155,13 @@ bool Multicast::evaluate_list()
      * the user is able to send or not
      */
 
-;
     int n_user = m_connected_user->size() + 1;
 
     qDebug() << m_user->get_ID() << " is evaluating his list";
     qDebug() << "---------------";
 
-    if((n_user - 1) < 1){
+    if((n_user - 1) < 1)
+    {
         //No one in the group
         qDebug() << "permission granted (alone in the group)";
         qDebug() << "---------------";
@@ -170,7 +170,8 @@ bool Multicast::evaluate_list()
 
     int max_value = 0;
     quint8 max_id = 0;
-    for(auto e : m_answer_list.keys())
+
+    for(unsigned char e : m_answer_list.keys())
     {
         if(m_answer_list.value(e) > max_value){
             max_value = m_answer_list.value(e);
@@ -179,16 +180,30 @@ bool Multicast::evaluate_list()
 
     }
 
-    if( max_id == m_user->get_ID()){
+    if( max_id == m_user->get_ID())
+    {   
+        for(int answer_i : m_answer_list)
+        {
+            if(answer_i == max_id)
+                return false;
+        }
+
         qDebug() << "permission granted";
         qDebug() << "---------------";
+
         start_send_audio();
+
         return true;
-    }else{
+
+    } else
+    {
         qDebug() << "permission denied";
         qDebug() << "---------------";
+
         return false;
     }
+
+
 }
 
 void Multicast::add_RTS(QByteArray i_data)
@@ -289,5 +304,3 @@ void Multicast::set_user_ID()
 
     send_user_id();
 }
-
-

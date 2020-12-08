@@ -2,6 +2,7 @@
 
 #include "multicast.h"
 #include "user.h"
+#include <QRandomGenerator>
 
 MulticastCtrl::MulticastCtrl(User* i_user) :
   m_multicast(new Multicast(i_user)),
@@ -137,7 +138,6 @@ void MulticastCtrl::process(EVENT i_e, QByteArray* i_data, quint8 i_priority) //
                     m_rts_timer.start(t_timeout);
 
                     break;
-
                 }
 
                 if(i_e == EVENT::E_RECV_REQUEST)
@@ -219,7 +219,6 @@ void MulticastCtrl::rts_timeout()
 
     } else
     {
-
         if(m_retry_attemp < max_retry_attemp)
         {
             m_retry_attemp++;
@@ -236,10 +235,10 @@ void MulticastCtrl::rts_timeout()
             return;
         }
 
+        int random_t = 50 + (QRandomGenerator::global()->generate() % 25); //random number of milliseconds [50, 75]
 
-        //qDebug() << "permission_denied";   
         m_check_rcvd_audio_data_timer.setSingleShot(true);
-        m_check_rcvd_audio_data_timer.start(t_timeout_received_audio_data);
+        m_check_rcvd_audio_data_timer.start(random_t);
     }
 
     m_multicast->clear_request_list();
@@ -264,8 +263,6 @@ void MulticastCtrl::select_ID_timeout()
 void MulticastCtrl::received_audio_data_timeout()
 {
     m_multicast->send_RTS();
-
-    //TODO: wait random t time
 
     //state_rts entry Point
     m_rts_timer.setSingleShot(true);

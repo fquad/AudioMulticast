@@ -60,6 +60,8 @@ private:
     User* m_user;
     int m_timer_count;
 
+    QTimer m_timer_rts;
+
     QMap<quint8, int>* m_connected_user;
     QMap<quint8, int>  m_connected_user_prev;
 
