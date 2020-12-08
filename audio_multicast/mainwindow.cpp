@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gui_connected_user->setEnabled(false);
     ui->gui_ID->setEnabled(false);
     ui->label_ID->setEnabled(false);
-    ui->label_connected_users_list->setEnabled(false);
     ui->label_info->setEnabled(false);
 
     connect(m_user, SIGNAL(send_update_gui_list()),
@@ -47,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (auto &deviceInfo: QAudioDeviceInfo::availableDevices(QAudio::AudioInput)) {
         ui->gui_audio_input_box->addItem(deviceInfo.deviceName(), qVariantFromValue(deviceInfo));
     }
+
 
 }
 
@@ -90,7 +90,6 @@ void MainWindow::on_gui_join_clicked()
             ui->gui_connected_user->setEnabled(false);
             ui->gui_ID->setEnabled(false);
             ui->label_ID->setEnabled(false);
-            ui->label_connected_users_list->setEnabled(false);
             ui->label_info->setEnabled(false);
 
             ui->gui_IP->setEnabled(true);
@@ -133,7 +132,6 @@ void MainWindow::recv_update_gui_ID(int i_ID)
         ui->gui_connected_user->setEnabled(true);
         ui->gui_ID->setEnabled(true);
         ui->label_ID->setEnabled(true);
-        ui->label_connected_users_list->setEnabled(true);
         ui->label_info->setEnabled(true);
 
     } else ui->gui_ID->clear();

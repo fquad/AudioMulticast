@@ -6,18 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>690</width>
-    <height>572</height>
+    <width>360</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>690</width>
-    <height>240</height>
+    <width>360</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>363</width>
+    <height>700</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Audio Multicast</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(44, 51, 53)</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -28,103 +37,43 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="input_layout">
+     <layout class="QHBoxLayout" name="horizontal_layout_3">
       <item>
-       <layout class="QHBoxLayout" name="input_layout_sub_1">
+       <layout class="QVBoxLayout" name="vertica_layout_4">
         <item>
-         <layout class="QVBoxLayout" name="input_layout_sub_1_1">
-          <item>
-           <widget class="QLabel" name="label_IP">
-            <property name="text">
-             <string>Group IP</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_port">
-            <property name="text">
-             <string>Port</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_input_device">
-            <property name="text">
-             <string>Audio input device</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_output_device">
-            <property name="text">
-             <string>Audio output device</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QLabel" name="label_2">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(153, 170, 171);</string>
+          </property>
+          <property name="text">
+           <string>Group IP</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <spacer name="horizontal_spacer_1">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(153, 170, 171);</string>
           </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="input_layout_sub_1_2">
-          <item>
-           <widget class="QLineEdit" name="gui_IP">
-            <property name="text">
-             <string>239.255.255.250</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="gui_port">
-            <property name="minimum">
-             <number>40000</number>
-            </property>
-            <property name="maximum">
-             <number>50000</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="gui_audio_input_box"/>
-          </item>
-          <item>
-           <widget class="QComboBox" name="gui_audio_output_box"/>
-          </item>
-         </layout>
+          <property name="text">
+           <string>Port</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="input_layout_sub_2">
       <item>
-       <widget class="QPushButton" name="gui_join">
-        <property name="text">
-         <string>join</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="gui_in_group_indicator">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
+       <spacer name="horizontal_spacer_1">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -136,7 +85,213 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <layout class="QVBoxLayout" name="vertical_layout_3">
+        <item>
+         <widget class="QLineEdit" name="gui_IP">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(153, 170, 171);
+border:none;
+</string>
+          </property>
+          <property name="text">
+           <string>239.255.255.250</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="gui_port">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(153, 170, 171);
+border: none;</string>
+          </property>
+          <property name="frame">
+           <bool>true</bool>
+          </property>
+          <property name="buttonSymbols">
+           <enum>QAbstractSpinBox::NoButtons</enum>
+          </property>
+          <property name="minimum">
+           <number>49152</number>
+          </property>
+          <property name="maximum">
+           <number>65535</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="Audio_settings_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
+      <item>
+       <widget class="QLabel" name="audio_input_label">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(153, 170, 171);</string>
+        </property>
+        <property name="text">
+         <string>Audio IN:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="gui_audio_output_box">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(153, 170, 171);
+</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="Audio_settings_output">
+      <item>
+       <widget class="QLabel" name="audio_output_label">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(153, 170, 171);</string>
+        </property>
+        <property name="text">
+         <string>Audio OUT:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="gui_audio_input_box">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(153, 170, 171);</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>5</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="gui_join">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>10000</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(44, 51, 53);
+background-color: rgb(218, 224, 226);
+border-style: outset;
+border-radius: 4px;</string>
+        </property>
+        <property name="text">
+         <string>join</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="gui_in_group_indicator">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="Line" name="line_1">
@@ -147,6 +302,14 @@
     </item>
     <item>
      <widget class="QLabel" name="label_info">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(153, 170, 171);</string>
+      </property>
       <property name="text">
        <string>Info</string>
       </property>
@@ -156,64 +319,32 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="info_layout">
+     <layout class="QHBoxLayout" name="horizzontal_layout_1">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="vertical_layout_1">
-        <item>
-         <widget class="QLabel" name="label_ID">
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Actual ID      </string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="vertical_spacer_1">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_connected_users_list">
-          <property name="text">
-           <string>Connected users list</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="vertical_spacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
+       <layout class="QVBoxLayout" name="vertical_layout_1"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <layout class="QHBoxLayout" name="horizontal_layout_4">
+          <item>
+           <widget class="QLabel" name="label_ID">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(153, 170, 171);</string>
+            </property>
+            <property name="text">
+             <string>my Id:</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <spacer name="horizontal_spacer_3">
             <property name="orientation">
@@ -228,28 +359,37 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="gui_ID"/>
+           <widget class="QLineEdit" name="gui_ID">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(153, 170, 171);
+border: none;</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
         <item>
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(153, 170, 171);</string>
+          </property>
+          <property name="text">
+           <string>Users in group:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::MinimumExpanding</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item>
            <widget class="QListWidget" name="gui_connected_user">
             <property name="minimumSize">
@@ -257,6 +397,48 @@
               <width>60</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(123, 135, 136);
+color: rgb(0,0,0);</string>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOn</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+            </property>
+            <property name="autoScroll">
+             <bool>true</bool>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="dragEnabled">
+             <bool>false</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::DragOnly</enum>
+            </property>
+            <property name="defaultDropAction">
+             <enum>Qt::MoveAction</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <property name="movement">
+             <enum>QListView::Free</enum>
             </property>
            </widget>
           </item>
@@ -274,14 +456,43 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="PTT_layout">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="QPushButton" name="gui_PTT">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-radius: 50px;
+border-style: outset;
+background-color: rgb(218, 224, 226);
+color: rgb(44, 51, 53);</string>
+        </property>
         <property name="text">
          <string>PTT</string>
         </property>
        </widget>
       </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="gui_sending_indicator">
         <property name="styleSheet">
@@ -292,34 +503,10 @@
         </property>
        </widget>
       </item>
-      <item>
-       <spacer name="horizontal_spacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>690</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

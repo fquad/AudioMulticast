@@ -81,8 +81,7 @@ void Multicast::update_user(QByteArray& i_user_name)
         (*m_connected_user)[id] = 1;
         m_connected_user_prev[id] = 0;
 
-    } else
-    {
+    } else{
         //user is already in the users list
         m_connected_user_prev[id]++;
     }
@@ -284,17 +283,22 @@ void Multicast::set_user_ID()
     quint8 ID = 0;
     bool free = true;
 
-    while(true && ID < 200)
-    {    
+    while(ID < 200)
+    {    /*
         free = true;
         for (quint8 occupied_ID : m_connected_user->keys())
         {
+
             free &= occupied_ID != ID;
             if (!free) break;
         }
         if(free) break;
-
-        ++ID;
+*/
+        if (m_connected_user->contains(ID)){
+            ++ID;
+        }else{
+            break;
+        }
     }
 
     qDebug() << "selected ID: " << ID;
