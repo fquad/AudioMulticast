@@ -31,17 +31,18 @@ void Multicast::data_audio_ready(QByteArray& i_data_audio)
 void Multicast::reproduce_audio(QByteArray i_audio_data)
 {
     //play the received audio on the speakers
-
     quint8 id = i_audio_data.at(0);
 
     m_user->set_talking_id(id);
     m_timer_talker_id.setSingleShot(true);
-    m_timer_talker_id.start(100);
+    m_timer_talker_id.start(200);
 
 
     QByteArray audio_data = i_audio_data.mid(1,-1);
 
+    emit m_user->send_update_gui_list();
     m_audio_interface.audio_reproduce_audio(audio_data);
+
 }
 
 void Multicast::start_send_audio()

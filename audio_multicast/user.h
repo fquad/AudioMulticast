@@ -64,7 +64,7 @@ signals:
     void send_to_server(int, QByteArray& msg);
     void send_update_gui_list(); // signal to update the GUI list
     void send_update_gui_sending_indicator(bool);
-    void send_update_gui_ID(int a);
+    void send_update_gui_ID(int);
 
 public slots:
     void receive(QByteArray&);

@@ -27,7 +27,7 @@ bool User::join_group(QHostAddress& i_IP, quint16 i_port)
     m_FSM->process(EVENT::E_CONNECT);
 
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout_send_name()));
-    m_timer.start(1000);
+    m_timer.start(250);
 
     return true;
 }
