@@ -252,9 +252,9 @@ void MulticastCtrl::rts_timeout()
         }
 
         int random_t = 50 + (QRandomGenerator::global()->generate() % 25); //random number of milliseconds [50, 75]
-
         m_check_rcvd_audio_data_timer.setSingleShot(true);
         m_check_rcvd_audio_data_timer.start(random_t);
+
     }
 
     m_multicast->clear_request_list();

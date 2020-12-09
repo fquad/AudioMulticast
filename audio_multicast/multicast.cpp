@@ -186,8 +186,11 @@ bool Multicast::evaluate_list()
     {   
         for(int answer_i : m_answer_list)
         {
-            if(answer_i == max_id)
+            if(answer_i == max_id && answer_i != m_user->get_ID()){
+                qDebug() << "permission denied gses";
+                qDebug() << "---------------";
                 return false;
+            }
         }
 
         qDebug() << "permission granted";
@@ -228,14 +231,16 @@ void Multicast::add_answer_to_list(QByteArray i_data)
     int answer = i_data.at(2);
 
     int n_answer;
-    if(m_answer_list.count(0)){
+    if(m_answer_list.contains(id)){ //contains
         m_answer_list.insert(id,answer);
     }else{
         n_answer = m_answer_list.value(id) + answer;
         m_answer_list.insert(id,n_answer);
     }
     qDebug() << m_user->get_ID()
-             << " has answer value: "
+             << " has added answer of"
+             << id
+             << "with value: "
              << answer;
 }
 

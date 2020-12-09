@@ -86,12 +86,13 @@ void User::receive(QByteArray& i_msg)
 
     if(sender_ID != m_ID)
     {
+        /*
         qDebug() << m_ID
                  << "received type: "
                  << i_msg.mid(0,1)
                  << " msg: "
                  << i_msg.mid(1,-1).toHex();
-
+        */
         switch(t_type)
         {
         case Multicast::MSG_TYPE::UPDATE_NAME:

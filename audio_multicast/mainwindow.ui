@@ -517,10 +517,7 @@ color: rgb(0,0,0);</string>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">border-radius: 50px;
-border-style: outset;
-background-color: rgb(218, 224, 226);
-color: rgb(44, 51, 53);</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>PTT</string>
