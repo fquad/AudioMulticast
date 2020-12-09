@@ -79,6 +79,8 @@ void MainWindow::on_gui_join_clicked()
     {
         if (m_user->quit_group())
         {
+            ui->gui_n_user->setText("---");
+
             ui->gui_connected_user->clear();
             //the quit button becomes join button
             ui->gui_join->setText("join");
@@ -105,11 +107,19 @@ void MainWindow::on_gui_join_clicked()
 
 void MainWindow::recv_update_gui_list()
 {
+    //show group size
+    ui->gui_n_user->setText(QString::number(m_user->get_connected_user_list().size() + 1));
+
+
     ui->gui_connected_user->clear();
 
-    for(quint8 user : m_user->get_connected_user_list().keys())
+    for(quint8 user_id : m_user->get_connected_user_list().keys())
     {
-        ui->gui_connected_user->addItem(QString::number(user));
+        if(user_id == m_user->get_talking_id()){
+            ui->gui_connected_user->addItem(QString::number(user_id) + " talking...");
+        }else{
+            ui->gui_connected_user->addItem(QString::number(user_id));
+        }
     }
 }
 

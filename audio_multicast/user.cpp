@@ -6,7 +6,8 @@
 User::User():
      m_ID(201), m_count_call_tout(0),
     m_in_device(QAudioDeviceInfo::defaultInputDevice()),
-    m_out_device(QAudioDeviceInfo::defaultOutputDevice())
+    m_out_device(QAudioDeviceInfo::defaultOutputDevice()),
+    m_talking_id(201)
 {
     m_FSM = new MulticastCtrl(this);
     m_FSM->set_user_list(&m_connected_user);

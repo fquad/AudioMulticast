@@ -30,14 +30,19 @@ public:
     inline QAudioDeviceInfo get_out_device(){ return m_out_device;}
     inline void set_out_device(QAudioDeviceInfo i_out_device) {m_in_device = i_out_device;}
 
+    inline void set_talking_id(quint8 i_ID) {m_talking_id = i_ID; }
+    inline quint8 get_talking_id() { return m_talking_id; }
+
     inline QMap<quint8, int>& get_connected_user_list() { return m_connected_user; }
 
-    inline quint16 get_port() { return m_port; };
-    inline QHostAddress& get_IP() { return m_IP; };
+    inline quint16 get_port() { return m_port; }
+    inline QHostAddress& get_IP() { return m_IP; }
 
 //--------------------------------------- private
 private:
-    int m_ID;
+    quint8 m_ID;
+
+    quint8 m_talking_id;
 
     MulticastCtrl* m_FSM;
 

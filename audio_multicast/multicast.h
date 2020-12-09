@@ -61,6 +61,7 @@ private:
     int m_timer_count;
 
     QTimer m_timer_rts;
+    QTimer m_timer_talker_id;
 
     QMap<quint8, int>* m_connected_user;
     QMap<quint8, int>  m_connected_user_prev;
@@ -76,6 +77,7 @@ private:
 
 private slots:
     void data_audio_ready(QByteArray&);
+    void talker_id_timeout();
 
 };
 

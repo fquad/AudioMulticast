@@ -19,6 +19,7 @@ enum EVENT
 {
     E_CONNECT,
     E_DISCONNECT,
+    E_JOIN_GROUP,
     E_RECV_REQUEST,
     E_REQUEST_SEND,
     E_STOP_SEND,
@@ -42,7 +43,8 @@ public:
     ~MulticastCtrl();
 
     bool get_is_sending();
-    void process(EVENT e, QByteArray* i_data = nullptr, quint8 i_priority = -1); //TODO: serve QByteArary i_data?
+    void process(EVENT i_e, QByteArray* i_data = nullptr);
+    void in_group_process(EVENT i_e, QByteArray* i_data = nullptr);
     void set_user_list(QMap<quint8, int>* i_user_list_ptr);
 
     //TODO m_priority should be private or protected
@@ -51,6 +53,8 @@ private:
     enum State
     {
         state_nogroup,
+        state_connecting,
+        state_ingroup,
         state_idle,
         state_rts,
         state_cts,
@@ -62,7 +66,8 @@ private:
 
     int m_retry_attemp;
 
-    State m_current_state;
+    State m_state;
+    State m_in_group_state;
 
     QTimer m_cts_timer;
     QTimer m_rts_timer;
