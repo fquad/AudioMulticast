@@ -26,7 +26,7 @@
    <string>Audio Multicast</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:rgb(44, 51, 53)</string>
+   <string notr="true">background-color:rgb(44, 51, 53);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -165,7 +165,7 @@ border: none;</string>
        <widget class="QComboBox" name="gui_audio_output_box">
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>0</width>
           <height>30</height>
          </size>
         </property>
@@ -181,8 +181,7 @@ border: none;</string>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(153, 170, 171);
-</string>
+         <string notr="true">color: rgb(153, 170, 171);</string>
         </property>
        </widget>
       </item>
@@ -212,7 +211,7 @@ border: none;</string>
        <widget class="QComboBox" name="gui_audio_input_box">
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>0</width>
           <height>30</height>
          </size>
         </property>
@@ -274,10 +273,19 @@ border: none;</string>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(44, 51, 53);
-background-color: rgb(218, 224, 226);
-border-style: outset;
-border-radius: 4px;</string>
+         <string notr="true">
+QPushButton{
+	color: rgb(44, 51, 53);
+	background-color: rgb(218, 224, 226);
+	border-style: outset;
+	border-radius: 4px;
+ }
+
+QPushButton:pressed {
+     background-color: rgb(123, 135, 136);
+ }
+
+</string>
         </property>
         <property name="text">
          <string>join</string>
@@ -341,7 +349,7 @@ border-radius: 4px;</string>
              <string notr="true">color: rgb(153, 170, 171);</string>
             </property>
             <property name="text">
-             <string>my Id:</string>
+             <string>My ID:</string>
             </property>
            </widget>
           </item>
@@ -449,7 +457,7 @@ color: rgb(0,0,0);</string>
              <number>0</number>
             </property>
             <property name="verticalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOn</enum>
+             <enum>Qt::ScrollBarAsNeeded</enum>
             </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -517,7 +525,17 @@ color: rgb(0,0,0);</string>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">QPushButton{
+	 border-radius:50px;
+	 color: rgb(44, 51, 53);
+	 background-color: rgb(218, 224, 226);
+ }
+
+QPushButton:pressed {
+     background-color: rgb(123, 135, 136);
+ }
+
+</string>
         </property>
         <property name="text">
          <string>PTT</string>

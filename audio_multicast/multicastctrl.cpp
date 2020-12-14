@@ -179,6 +179,7 @@ void MulticastCtrl::process(EVENT i_e, QByteArray* i_data)
                 qDebug() << "disconnect";
                 m_multicast->disconnect_from_group();
                 m_state = State::state_nogroup;
+                m_select_ID_timer.stop();
                 m_ingroup = false;
                 m_first_time = true;
                 return;
