@@ -23,7 +23,7 @@ void Multicast::data_audio_ready(QByteArray& i_data_audio)
     audio_data.append(i_data_audio);
 
     //qDebug() << i_data_audio;
-    qDebug() << "audio size: " << i_data_audio.size();
+    //qDebug() << "audio size: " << i_data_audio.size();
     send(MSG_TYPE::AUDIO, audio_data);
     //reproduce_audio(audio_data);
 }
@@ -128,28 +128,24 @@ void Multicast::send_user_id()
 void Multicast::answer_RTS(bool i_answer, QByteArray i_requester_id)
 {
     // answer to the received request to send
-    //TODO errore non bisogna inviare m_id ma l'id di chi ha fatto la richiesta
 
     //check if the id of the user who made the request is valid
     quint8 r_id = i_requester_id.at(0);
 
-    if(r_id > 0 && r_id < 255)
-    {
-        qDebug() << QString::number(m_user->get_ID())
-                 << " answered : "
-                 << QString::number(i_answer)
-                 << " to : "
-                 << i_requester_id;
+    qDebug() << QString::number(m_user->get_ID())
+             << " answered : "
+             << QString::number(i_answer)
+             << " to : "
+             << i_requester_id;
 
-        QByteArray msg;
+    QByteArray msg;
 
-        msg.append(m_user->get_ID());
-        msg.append(r_id);
-        msg.append(i_answer);
+    msg.append(m_user->get_ID());
+    msg.append(r_id);
+    msg.append(i_answer);
 
-        send(MSG_TYPE::ANSWER, msg);
+    send(MSG_TYPE::ANSWER, msg);
 
-    }
 }
 
 bool Multicast::evaluate_list()
@@ -183,12 +179,18 @@ bool Multicast::evaluate_list()
 
     }
 
+    if(m_answer_list.empty()){
+        qDebug() << "no answers received";
+        qDebug() << "---------------";
+        return false;
+    }
+
     if( max_id == m_user->get_ID())
     {   
         for(int answer_i : m_answer_list)
         {
             if(answer_i == max_id && answer_i != m_user->get_ID()){
-                qDebug() << "permission denied gses";
+                qDebug() << "permission denied draw users";
                 qDebug() << "---------------";
                 return false;
             }
@@ -228,8 +230,10 @@ void Multicast::add_RTS(QByteArray i_data)
 void Multicast::add_answer_to_list(QByteArray i_data)
 {
     // add the received answer the the lists of all answers
+
+    //TODO COMMENTO
     quint8 id = i_data.at(1);
-    int answer = i_data.at(2);
+    quint8 answer = i_data.at(2);
 
     int n_answer;
     if(m_answer_list.contains(id)){ //contains
@@ -239,10 +243,12 @@ void Multicast::add_answer_to_list(QByteArray i_data)
         m_answer_list.insert(id,n_answer);
     }
     qDebug() << m_user->get_ID()
-             << " has added answer of"
+             << "answer list of "
              << id
-             << "with value: "
-             << answer;
+             << "from "
+             << i_data.at(0)
+             << " has value value: "
+             <<  m_answer_list.value(id);
 }
 
 void Multicast::clear_request_list()
@@ -257,8 +263,6 @@ void Multicast::clear_answer_list()
 
 void Multicast::send(MSG_TYPE i_type, QByteArray data)
 {
-    // send the given message on a comunication medium
-    // currently to the simulated users
     // in the final implementation the message will be sent using the multicast protocol
 
     QByteArray t_msg_to_users;

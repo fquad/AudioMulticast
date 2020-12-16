@@ -10,7 +10,7 @@
 
 const int max_retry_attemp = 3;
 
-const int t_timeout = 500;
+const int t_timeout = 1000;
 
 const int t_timeout_select_ID = 1000;
 

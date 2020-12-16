@@ -2,6 +2,8 @@ QT       += core gui network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
+
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
