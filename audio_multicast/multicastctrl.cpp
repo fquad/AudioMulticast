@@ -144,6 +144,22 @@ void MulticastCtrl::in_group_process(EVENT i_e, QByteArray* i_data){
                 m_multicast->stop_send_audio();
                 break;
 
+            }else if(i_e == EVENT::E_RECV_AUDIO_DATA)
+            {
+
+                in_group_process(EVENT::E_STOP_SEND);
+                /*
+                // Disable timer to check if no data are received
+                m_check_rcvd_audio_data_timer.stop();
+                m_rts_timer.stop();
+                m_cts_timer.stop();
+                //someone is already transmitting
+                m_in_group_state = State::state_idle;
+
+                //Audio data packet received
+                m_multicast->reproduce_audio(*i_data);
+                */
+                break;
             }
         break;
     }
@@ -236,6 +252,7 @@ void MulticastCtrl::rts_timeout()
 
     } else
     {
+
         if(m_retry_attemp < max_retry_attemp)
         {
             m_retry_attemp++;
