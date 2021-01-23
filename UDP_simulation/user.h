@@ -2,8 +2,10 @@
 #define USER_H
 
 #include <QList>
+#include "priority_ctrl.h"
+#include <QByteArray>
 
-
+class UDPSimulation;
 
 class User: public QObject
 {
@@ -11,50 +13,40 @@ class User: public QObject
 
 //--------------------------------------- public
 public:
-    User(int m_id);
+    User(int m_id, UDPSimulation *w);
     ~User();
-
-    void send(int i_type, QString& i_msg);
+    void PTTpressed();
+    void PTTreleased();
+    bool get_is_sending();
     void connect_user(User* i_user);
     void disconnect_from_all();
+    inline int get_id() const {return m_id;}
+    inline QMap<quint8, int>& get_connected_user_list() {return m_connected_user;}
 
-    inline int get_id() const {return m_id;};
-    inline QMap<QString, int>& get_connected_user_list() {return m_connected_user;};
-public:
-    enum MSG_TYPE
-    {
-        UPDATE_NAME, MSG,
-        AUDIO_DATA, AUDIO_ACK
-    };
 
 //--------------------------------------- private
 private:
-    enum State
-    {
-        IDLE, TALK,
-        LISTEN
-    };
-
     int m_id;
 
-    State m_internal_state;
+    priority_ctrl* FSM; //TODO: cambiare nome classe
+
+    //State m_internal_state;
 
     int m_count_call_tout;
 
-    QMap<QString, int> m_connected_user;
-    QMap<QString, int> m_last_count;
+    QMap<quint8, int> m_connected_user;
 
     QTimer* m_timer;
 
 
 //----------------------------------- signals and slot
 signals:
-    void send_to_slot(QString& o_msg);
-    void send_to_server(int, QString& msg);
+    void send_to_slot(QByteArray& o_msg);
+    void send_to_server(int, QByteArray& msg);
     void update_gui_list(User* i_user); // signal to update the GUI list
 
 public slots:
-    void receive(QString&);
+    void receive(QByteArray&);
     void timeout_send_name();
 
 };

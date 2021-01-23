@@ -7,7 +7,7 @@ Server::Server()
 
 bool Server::join(User* i_user)
 {
-    if(!m_user_list.contains(QString::number(i_user->get_id())))
+    if(!m_user_list.contains(i_user->get_id()))
     {
         for(User* user : m_user_list)
         {
@@ -17,7 +17,7 @@ bool Server::join(User* i_user)
                 i_user->connect_user(user);
             }
         }
-        m_user_list[QString::number(i_user->get_id())] = i_user;
+        m_user_list[i_user->get_id()] = i_user;
 
         return true;
     }
@@ -27,7 +27,7 @@ bool Server::join(User* i_user)
 void Server::exit(User* i_user)
 {
     i_user->disconnect_from_all();
-    m_user_list.remove(QString::number(i_user->get_id()));
+    m_user_list.remove(i_user->get_id());
 }
 
 Server::~Server()

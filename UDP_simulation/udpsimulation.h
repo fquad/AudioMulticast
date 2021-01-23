@@ -26,6 +26,7 @@ class UDPSimulation : public QMainWindow
 public:
     UDPSimulation(QWidget *parent = nullptr);
     ~UDPSimulation();
+    Ui::UDPSimulation *ui;
 
 private slots:
     void on_join_btn_user_1_clicked();
@@ -46,14 +47,17 @@ private slots:
     void on_input_id_user_4_valueChanged(int arg1);
     void on_input_id_user_5_valueChanged(int arg1);
 
-    void receive_updated_list(User*);
-    void receive_from_users(int, QString&);
     void on_multiple_send_btn_clicked();
+    void on_btn_log_clear_clicked();
 
-    void on_btn_clear_log_clicked();
+    void receive_updated_list(User*);
+
+    void receive_from_users(int, QByteArray&);
+
+
 
 private:
-    Ui::UDPSimulation *ui;
+
     QErrorMessage* m_err_msg;
 
     Server m_server;
@@ -66,12 +70,11 @@ private:
         QCheckBox* m_GUI_send_flag;
     };
 
-    QMap<QString, USER_GUI> m_user_list;
+    QMap<quint8, USER_GUI> m_user_list;
 
     int m_count_user = 0;
 
-    bool is_join_flag[N_USER];
-
-    QTime m_timer;
+    int is_join_flag[N_USER];
+    bool multiple_send_status;
 };
 #endif // UDPSIMULATION_H

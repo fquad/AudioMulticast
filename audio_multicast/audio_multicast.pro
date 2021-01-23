@@ -1,6 +1,8 @@
-QT       += core gui
+QT       += core gui network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 CONFIG += c++11
 
@@ -16,22 +18,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    audiointerface.cpp \
     main.cpp \
-    priority.cpp \
-    priority_ctrl.cpp \
-    server.cpp \
-    udpsimulation.cpp \
+    mainwindow.cpp \
+    multicast.cpp \
+    multicastctrl.cpp \
+    udpinterface.cpp \
     user.cpp
 
 HEADERS += \
-    priority.h \
-    priority_ctrl.h \
-    server.h \
-    udpsimulation.h \
+    audiointerface.h \
+    mainwindow.h \
+    multicast.h \
+    multicastctrl.h \
+    udpinterface.h \
     user.h
 
 FORMS += \
-    udpsimulation.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
